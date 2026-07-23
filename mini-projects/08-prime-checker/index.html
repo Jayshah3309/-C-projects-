@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prime Number Checker</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(420px, 90vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 20px; font-size: 1.8rem; }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 1.2rem;
+      text-align: center;
+      outline: none;
+    }
+    input:focus { border-color: #60a5fa; }
+    .result {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 1.4rem;
+      min-height: 3em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .result .verdict { font-weight: 700; font-size: 1.7rem; }
+    .result .info { font-size: 0.95rem; color: #94a3b8; margin-top: 6px; }
+    .prime { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+    .not-prime { background: rgba(251, 146, 60, 0.15); color: #fb923c; }
+    .back { margin-top: 20px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔢 Prime Number Checker</h1>
+    <input type="number" id="numInput" value="17" oninput="check()" autofocus />
+    <div class="result" id="result"><div class="verdict">17 is Prime</div><div class="info">Divisible only by 1 and itself</div></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function check() {
+      const val = document.getElementById('numInput').value;
+      const el = document.getElementById('result');
+      if (val === '') { el.innerHTML = '<div class="verdict">Enter a number</div>'; return; }
+      const num = parseInt(val);
+      if (isNaN(num) || num < 0) { el.innerHTML = '<div class="verdict">❌ Invalid</div>'; return; }
+      if (num < 2) {
+        el.innerHTML = `<div class="verdict">${num} is not Prime</div><div class="info">Prime numbers are ≥ 2</div>`;
+        el.className = 'result not-prime'; return;
+      }
+      let isPrime = true;
+      for (let i = 2; i * i <= num; i++) { if (num % i === 0) { isPrime = false; break; } }
+      if (isPrime) {
+        el.innerHTML = `<div class="verdict">${num} is Prime</div><div class="info">Divisible only by 1 and itself</div>`;
+        el.className = 'result prime';
+      } else {
+        el.innerHTML = `<div class="verdict">${num} is not Prime</div><div class="info">It has divisors other than 1 and itself</div>`;
+        el.className = 'result not-prime';
+      }
+    }
+    check();
+  </script>
+</body>
+</html>
+

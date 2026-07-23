@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DFS Traversal</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(560px, 94vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
+    .controls input { padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .9rem; outline: none; width: 80px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 8px 16px; border: none; border-radius: 6px; color: #fff; font-size: .85rem; cursor: pointer; transition: background .2s; }
+    .run-btn { background: #2563eb; } .run-btn:hover { background: #1d4ed8; }
+    .reset-btn { background: #475569; } .reset-btn:hover { background: #64748b; }
+    .graph-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 60px; margin-bottom: 8px; text-align: left; font-family: monospace; font-size: .9rem; }
+    .g-node { margin: 2px 0; }
+    .result-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 40px; margin-bottom: 8px; }
+    .result-item { display: inline-block; background: #1e3a5f; color: #60a5fa; padding: 4px 10px; border-radius: 4px; margin: 2px; font-weight: 600; }
+    .result-item.visiting { background: #059669; color: #fff; }
+    .info { color: #94a3b8; font-size: .85rem; }
+    .back { margin-top: 14px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔍 Depth-First Search (DFS)</h1>
+    <p class="subtitle">Traverse graph using stack (recursion)</p>
+    <div class="controls">
+      <input type="text" id="startNode" value="A" placeholder="Start" style="width:60px" />
+      <button class="run-btn" onclick="runDFS()">Run DFS</button>
+      <button class="reset-btn" onclick="resetGraph()">Reset</button>
+    </div>
+    <div class="graph-display" id="graphDisplay"></div>
+    <div class="result-display" id="resultDisplay"></div>
+    <div class="info" id="dfsInfo">Graph: A-B, A-C, B-D, B-E, C-F</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    const graph = {
+      'A': ['B', 'C'],
+      'B': ['A', 'D', 'E'],
+      'C': ['A', 'F'],
+      'D': ['B'],
+      'E': ['B'],
+      'F': ['C']
+    };
+
+    function renderGraph() {
+      const display = document.getElementById('graphDisplay');
+      display.innerHTML = Object.keys(graph).sort().map(node =>
+        `<div class="g-node"><span style="color:#60a5fa;font-weight:600">${node}</span> → [${graph[node].join(', ')}]</div>`
+      ).join('');
+    }
+
+    function runDFS() {
+      const start = document.getElementById('startNode').value.trim().toUpperCase();
+      if (!graph[start]) { alert('Start node not in graph!'); return; }
+      const visited = new Set();
+      const order = [];
+      const resultDisplay = document.getElementById('resultDisplay');
+
+      function dfs(node) {
+        visited.add(node);
+        order.push(node);
+        resultDisplay.innerHTML = order.map((n, i) =>
+          `<span class="result-item ${i === order.length - 1 ? 'visiting' : ''}">${n}</span>`
+        ).join('') + ' ...';
+        for (const neighbor of graph[node].sort()) {
+          if (!visited.has(neighbor)) dfs(neighbor);
+        }
+      }
+
+      dfs(start);
+      resultDisplay.innerHTML = order.map((n, i) =>
+        `<span class="result-item visiting">${n}</span>`
+      ).join('') + `<br><span style="color:#94a3b8;font-size:.85rem">DFS Order: ${order.join(' → ')}</span>`;
+      document.getElementById('dfsInfo').textContent = `Visited ${order.length} nodes | Path: ${order.join(' → ')}`;
+    }
+
+    function resetGraph() {
+      renderGraph();
+      document.getElementById('resultDisplay').innerHTML = '<span style="color:#475569;">Click "Run DFS" to start</span>';
+      document.getElementById('dfsInfo').textContent = 'Graph: A-B, A-C, B-D, B-E, C-F';
+    }
+    resetGraph();
+  </script>
+</body>
+</html>
+

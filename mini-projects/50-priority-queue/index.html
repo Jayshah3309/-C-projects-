@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Priority Queue</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(500px, 90vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
+    .controls input { padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .9rem; outline: none; width: 80px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 8px 12px; border: none; border-radius: 6px; color: #fff; font-size: .8rem; cursor: pointer; transition: background .2s; }
+    .enq-btn { background: #2563eb; } .enq-btn:hover { background: #1d4ed8; }
+    .deq-btn { background: #dc2626; } .deq-btn:hover { background: #b91c1c; }
+    .peek-btn { background: #7c3aed; } .peek-btn:hover { background: #6d28d9; }
+    .clr-btn { background: #475569; } .clr-btn:hover { background: #64748b; }
+    .pq-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 60px; margin-bottom: 8px; }
+    .pq-list { display: flex; flex-direction: column; gap: 4px; }
+    .pq-item { display: flex; justify-content: space-between; align-items: center; background: #1e3a5f; padding: 6px 14px; border-radius: 6px; font-family: monospace; }
+    .pq-item .val { color: #60a5fa; font-weight: 600; }
+    .pq-item .pri { background: #0f172a; padding: 2px 8px; border-radius: 4px; color: #fb923c; font-size: .8rem; }
+    .pq-item:first-child { border: 2px solid #4ade80; }
+    .pq-item:first-child .pri { color: #4ade80; }
+    .info { color: #94a3b8; font-size: .85rem; }
+    .back { margin-top: 14px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>⭐ Priority Queue</h1>
+    <p class="subtitle">Higher priority elements are dequeued first</p>
+    <div class="controls">
+      <input type="text" id="pqVal" value="Task-A" placeholder="Value" style="width:100px" />
+      <input type="number" id="pqPri" value="5" placeholder="Priority" style="width:80px" />
+      <button class="enq-btn" onclick="enqueue()">Enqueue</button>
+      <button class="deq-btn" onclick="dequeue()">Dequeue</button>
+      <button class="peek-btn" onclick="peek()">Peek</button>
+      <button class="clr-btn" onclick="clearPQ()">Clear</button>
+    </div>
+    <div class="pq-display" id="pqDisplay"></div>
+    <div class="info" id="pqInfo">Size: 0</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    let pq = [];
+
+    function enqueue() {
+      const val = document.getElementById('pqVal').value;
+      const pri = parseInt(document.getElementById('pqPri').value);
+      if (!val || isNaN(pri)) return;
+      pq.push({val, pri});
+      pq.sort((a, b) => b.pri - a.pri);
+      render();
+    }
+
+    function dequeue() {
+      if (pq.length === 0) { alert('Queue empty!'); return; }
+      const item = pq.shift();
+      render();
+      alert(`Dequeued: ${item.val} (priority: ${item.pri})`);
+    }
+
+    function peek() {
+      if (pq.length === 0) { alert('Queue empty!'); return; }
+      alert(`Front: ${pq[0].val} (priority: ${pq[0].pri})`);
+    }
+
+    function clearPQ() { pq = []; render(); }
+
+    function render() {
+      const display = document.getElementById('pqDisplay');
+      const info = document.getElementById('pqInfo');
+      if (pq.length === 0) {
+        display.innerHTML = '<div style="color:#475569;padding:10px 0">Empty priority queue</div>';
+        info.textContent = 'Size: 0'; return;
+      }
+      display.innerHTML = `<div class="pq-list">${pq.map((item, i) =>
+        `<div class="pq-item"><span class="val">${item.val}</span><span class="pri">P: ${item.pri}</span></div>`
+      ).join('')}</div>`;
+      info.textContent = `Size: ${pq.length} | Highest priority: ${pq[0].val} (P: ${pq[0].pri})`;
+    }
+    render();
+  </script>
+</body>
+</html>
+

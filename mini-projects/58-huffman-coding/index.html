@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Huffman Coding</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(560px, 94vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: .9rem; }
+    input { width: 100%; padding: 10px 14px; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: #e2e8f0; font-size: 1rem; outline: none; }
+    input:focus { border-color: #60a5fa; }
+    button { width: 100%; padding: 12px; background: #2563eb; border: none; border-radius: 8px; color: #fff; font-size: 1rem; cursor: pointer; transition: background .2s; }
+    button:hover { background: #1d4ed8; }
+    .result { margin-top: 18px; padding: 14px; background: #0f172a; border-radius: 8px; min-height: 3em; }
+    .code-row { display: flex; justify-content: space-between; padding: 4px 8px; font-family: monospace; }
+    .code-row .char { color: #60a5fa; font-weight: 600; }
+    .code-row .code { color: #4ade80; }
+    .code-row .freq { color: #94a3b8; }
+    .back { margin-top: 16px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📦 Huffman Coding</h1>
+    <p class="subtitle">Generate optimal prefix-free binary codes</p>
+    <div class="group"><label>Enter text</label><input type="text" id="inputStr" value="hello world" /></div>
+    <button onclick="encode()">Generate Huffman Codes</button>
+    <div class="result" id="result"></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function encode() {
+      const text = document.getElementById('inputStr').value;
+      if (!text) return;
+      const freq = {};
+      for (const ch of text) freq[ch] = (freq[ch] || 0) + 1;
+
+      // Build nodes
+      let nodes = Object.entries(freq).map(([char, count]) => ({ char, count, left: null, right: null }));
+      nodes.sort((a, b) => a.count - b.count);
+
+      while (nodes.length > 1) {
+        const left = nodes.shift();
+        const right = nodes.shift();
+        nodes.push({ char: null, count: left.count + right.count, left, right });
+        nodes.sort((a, b) => a.count - b.count);
+      }
+      const root = nodes[0];
+
+      const codes = {};
+      function traverse(node, code) {
+        if (!node) return;
+        if (node.char !== null) codes[node.char] = code || '0';
+        else { traverse(node.left, code + '0'); traverse(node.right, code + '1'); }
+      }
+      traverse(root, '');
+
+      const el = document.getElementById('result');
+      const totalBits = [...text].reduce((sum, ch) => sum + codes[ch].length, 0);
+      const fixedBits = text.length * 8;
+
+      el.innerHTML = `<div style="color:#94a3b8;font-size:.85rem;margin-bottom:8px">Character → Code</div>` +
+        Object.entries(codes).sort().map(([char, code]) =>
+          `<div class="code-row"><span class="char">${char === ' ' ? '␣' : char}</span><span class="code">${code}</span><span class="freq">freq: ${freq[char]}</span></div>`
+        ).join('') +
+        `<div style="margin-top:10px;color:#7fffd4;font-size:.85rem">Huffman: ${totalBits} bits | Fixed (8-bit): ${fixedBits} bits | Compression: ${((1 - totalBits/fixedBits)*100).toFixed(1)}%</div>`;
+    }
+  </script>
+</body>
+</html>
+

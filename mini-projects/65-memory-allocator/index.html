@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memory Allocator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; width: min(560px, 94vw); }
+    h1 { margin-bottom: 8px; font-size: 1.4rem; }
+    .subtitle { color: #94a3b8; font-size: .85rem; margin-bottom: 14px; }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .controls input { padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .85rem; outline: none; width: 100px; }
+    .controls button { padding: 8px 16px; border: none; border-radius: 6px; color: #fff; font-size: .8rem; cursor: pointer; transition: background .2s; }
+    .mem-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 120px; margin-bottom: 8px; }
+    .mem-block { display: inline-block; margin: 2px; border-radius: 4px; text-align: center; font-size: .7rem; font-family: monospace; padding: 6px 4px; vertical-align: top; }
+    .mem-block.free { background: #1e3a5f; color: #60a5fa; border: 1px dashed #334155; }
+    .mem-block.allocated { background: #05966933; color: #4ade80; border: 1px solid #4ade80; }
+    .info { color: #94a3b8; font-size: .85rem; }
+    .back { display: inline-block; margin-top: 12px; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>💾 Memory Allocator</h1>
+    <p class="subtitle">Simulated memory blocks (64 KB total) | First-Fit allocation</p>
+    <div class="controls">
+      <input type="number" id="allocSize" value="8" min="1" max="32" placeholder="Size KB" />
+      <button onclick="allocMem()" style="background:#2563eb">Allocate</button>
+      <button onclick="freeMem()" style="background:#dc2626">Free Random</button>
+      <button onclick="resetMem()" style="background:#475569">Reset</button>
+    </div>
+    <div class="mem-display" id="memDisplay"></div>
+    <div class="info" id="memInfo">Total: 64 KB | Free: 64 KB | Used: 0 KB</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    const TOTAL = 64;
+    let blocks = [{ start: 0, size: TOTAL, status: 'free' }];
+
+    function render() {
+      const display = document.getElementById('memDisplay');
+      const info = document.getElementById('memInfo');
+      let used = 0, free = 0;
+      display.innerHTML = blocks.map(b => {
+        const w = Math.max(20, (b.size / TOTAL) * 400);
+        if (b.status === 'free') free += b.size; else used += b.size;
+        return `<div class="mem-block ${b.status}" style="width:${w}px;min-width:30px">${b.status === 'free' ? 'F' : 'A'}<br>${b.size}K</div>`;
+      }).join('');
+      info.textContent = `Total: ${TOTAL} KB | Free: ${free} KB | Used: ${used} KB | Blocks: ${blocks.length}`;
+    }
+
+    function allocMem() {
+      const size = parseInt(document.getElementById('allocSize').value);
+      if (isNaN(size) || size < 1) return;
+      for (let i = 0; i < blocks.length; i++) {
+        if (blocks[i].status === 'free' && blocks[i].size >= size) {
+          if (blocks[i].size > size) {
+            blocks.splice(i, 0, { start: blocks[i].start, size: size, status: 'allocated' });
+            blocks[i + 1].start += size;
+            blocks[i + 1].size -= size;
+          } else { blocks[i].status = 'allocated'; }
+          render(); return;
+        }
+      }
+      alert('No suitable free block found!');
+    }
+
+    function freeMem() {
+      const alloc = blocks.filter(b => b.status === 'allocated');
+      if (alloc.length === 0) return;
+      const idx = blocks.indexOf(alloc[Math.floor(Math.random() * alloc.length)]);
+      blocks[idx].status = 'free';
+      // Coalesce adjacent free blocks
+      for (let i = 0; i < blocks.length - 1; i++) {
+        if (blocks[i].status === 'free' && blocks[i+1].status === 'free') {
+          blocks[i].size += blocks[i+1].size;
+          blocks.splice(i+1, 1);
+          i--;
+        }
+      }
+      render();
+    }
+
+    function resetMem() { blocks = [{ start: 0, size: TOTAL, status: 'free' }]; render(); }
+    render();
+  </script>
+</body>
+</html>
+

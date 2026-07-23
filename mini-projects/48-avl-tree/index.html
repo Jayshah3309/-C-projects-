@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AVL Tree</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(560px, 94vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
+    .controls input { padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .9rem; outline: none; width: 80px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 8px 12px; border: none; border-radius: 6px; color: #fff; font-size: .8rem; cursor: pointer; transition: background .2s; }
+    .ins-btn { background: #2563eb; } .ins-btn:hover { background: #1d4ed8; }
+    .rem-btn { background: #dc2626; } .rem-btn:hover { background: #b91c1c; }
+    .clr-btn { background: #475569; } .clr-btn:hover { background: #64748b; }
+    .tree-display { background: #0f172a; border-radius: 8px; padding: 16px; min-height: 80px; margin-bottom: 8px; overflow-x: auto; }
+    .info { color: #94a3b8; font-size: .85rem; }
+    .back { margin-top: 14px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>⚖️ AVL Tree</h1>
+    <p class="subtitle">Self-balancing BST (height difference ≤ 1)</p>
+    <div class="controls">
+      <input type="number" id="avlInput" value="30" placeholder="Val" />
+      <button class="ins-btn" onclick="insert()">Insert</button>
+      <button class="rem-btn" onclick="removeNode()">Remove</button>
+      <button class="clr-btn" onclick="clearTree()">Clear</button>
+    </div>
+    <div class="tree-display" id="treeDisplay"></div>
+    <div class="info" id="avlInfo">Size: 0 | Balanced: Yes</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function node(val) { return { val, left: null, right: null, h: 1 }; }
+    function getH(n) { return n ? n.h : 0; }
+    function getBF(n) { return n ? getH(n.left) - getH(n.right) : 0; }
+    function updH(n) { if (n) n.h = 1 + Math.max(getH(n.left), getH(n.right)); }
+    function rotR(y) { const x = y.left; const t = x.right; x.right = y; y.left = t; updH(y); updH(x); return x; }
+    function rotL(x) { const y = x.right; const t = y.left; y.left = x; x.right = t; updH(x); updH(y); return y; }
+
+    function insertAVL(root, val) {
+      if (!root) return node(val);
+      if (val < root.val) root.left = insertAVL(root.left, val);
+      else if (val > root.val) root.right = insertAVL(root.right, val);
+      else return root;
+      updH(root);
+      const bf = getBF(root);
+      if (bf > 1 && val < root.left.val) return rotR(root);
+      if (bf < -1 && val > root.right.val) return rotL(root);
+      if (bf > 1 && val > root.left.val) { root.left = rotL(root.left); return rotR(root); }
+      if (bf < -1 && val < root.right.val) { root.right = rotR(root.right); return rotL(root); }
+      return root;
+    }
+
+    function minNode(root) { while (root.left) root = root.left; return root; }
+
+    function deleteAVL(root, val) {
+      if (!root) return null;
+      if (val < root.val) root.left = deleteAVL(root.left, val);
+      else if (val > root.val) root.right = deleteAVL(root.right, val);
+      else {
+        if (!root.left || !root.right) { root = root.left || root.right; }
+        else { const m = minNode(root.right); root.val = m.val; root.right = deleteAVL(root.right, m.val); }
+      }
+      if (!root) return null;
+      updH(root);
+      const bf = getBF(root);
+      if (bf > 1 && getBF(root.left) >= 0) return rotR(root);
+      if (bf > 1 && getBF(root.left) < 0) { root.left = rotL(root.left); return rotR(root); }
+      if (bf < -1 && getBF(root.right) <= 0) return rotL(root);
+      if (bf < -1 && getBF(root.right) > 0) { root.right = rotR(root.right); return rotL(root); }
+      return root;
+    }
+
+    function inorder(root, acc = []) { if (root) { inorder(root.left, acc); acc.push(root.val); inorder(root.right, acc); } return acc; }
+
+    let root = null;
+
+    function render() {
+      const display = document.getElementById('treeDisplay');
+      const info = document.getElementById('avlInfo');
+      if (!root) { display.innerHTML = '<div style="color:#475569;">Empty tree</div>'; info.textContent = 'Size: 0 | Balanced: Yes'; return; }
+      const inOrd = inorder(root);
+      display.innerHTML = `<div style="color:#60a5fa;font-family:monospace">Root: ${root.val} | Height: ${root.h} | In-order: [${inOrd.join(', ')}]</div>`;
+      info.textContent = `Size: ${inOrd.length} | Height: ${root.h} | Balanced: ${Math.abs(getBF(root)) <= 1 ? '✅ Yes' : '❌ No'}`;
+    }
+
+    function insert() { const v = parseInt(document.getElementById('avlInput').value); if (isNaN(v)) return; root = insertAVL(root, v); render(); }
+    function removeNode() { const v = parseInt(document.getElementById('avlInput').value); if (isNaN(v)) return; root = deleteAVL(root, v); render(); }
+    function clearTree() { root = null; render(); }
+    render();
+  </script>
+</body>
+</html>
+

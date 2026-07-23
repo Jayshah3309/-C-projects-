@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fibonacci Series</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(460px, 90vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 20px; font-size: 1.8rem; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: 0.9rem; }
+    input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 1rem;
+      outline: none;
+    }
+    input:focus { border-color: #60a5fa; }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1d4ed8; }
+    .result {
+      margin-top: 18px;
+      padding: 14px;
+      background: #0f172a;
+      border-radius: 8px;
+      font-size: 1rem;
+      min-height: 3em;
+      max-height: 200px;
+      overflow-y: auto;
+      text-align: left;
+      word-break: break-all;
+      line-height: 1.6;
+    }
+    .result .seq { color: #60a5fa; }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📊 Fibonacci Series</h1>
+    <div class="group">
+      <label>Number of terms (n)</label>
+      <input type="number" id="terms" value="10" min="1" max="50" />
+    </div>
+    <button onclick="generate()">Generate</button>
+    <div class="result" id="result"><span class="seq">0, 1, 1, 2, 3, 5, 8, 13, 21, 34</span></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function generate() {
+      const n = parseInt(document.getElementById('terms').value);
+      const el = document.getElementById('result');
+      if (isNaN(n) || n < 1 || n > 100) { el.innerHTML = '❌ Enter a number between 1 and 100'; return; }
+      if (n === 1) { el.innerHTML = '<span class="seq">0</span>'; return; }
+      let seq = [0, 1];
+      for (let i = 2; i < n; i++) seq.push(seq[i-1] + seq[i-2]);
+      el.innerHTML = `<span class="seq">${seq.join(', ')}</span>`;
+    }
+  </script>
+</body>
+</html>
+

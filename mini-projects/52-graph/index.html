@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graph (Adjacency List)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(560px, 94vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
+    .controls input { padding: 8px 10px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .85rem; outline: none; width: 70px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 8px 12px; border: none; border-radius: 6px; color: #fff; font-size: .78rem; cursor: pointer; transition: background .2s; }
+    .add-btn { background: #2563eb; } .add-btn:hover { background: #1d4ed8; }
+    .rem-btn { background: #dc2626; } .rem-btn:hover { background: #b91c1c; }
+    .clr-btn { background: #475569; } .clr-btn:hover { background: #64748b; }
+    .graph-display { background: #0f172a; border-radius: 8px; padding: 14px; min-height: 80px; margin-bottom: 8px; text-align: left; }
+    .g-node { margin-bottom: 6px; font-family: monospace; font-size: .9rem; }
+    .g-label { color: #60a5fa; font-weight: 600; }
+    .g-neighbor { color: #94a3b8; }
+    .g-arrow { color: #475569; }
+    .info { color: #94a3b8; font-size: .85rem; }
+    .back { margin-top: 14px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔗 Graph (Adjacency List)</h1>
+    <p class="subtitle">Undirected graph with neighbors</p>
+    <div class="controls">
+      <input type="text" id="gNode" value="A" placeholder="Node" style="width:50px" />
+      <input type="text" id="gNeighbor" value="B" placeholder="Neighbor" style="width:70px" />
+      <button class="add-btn" onclick="addEdge()">Add Edge</button>
+      <button class="rem-btn" onclick="removeNode()">Remove Node</button>
+      <button class="clr-btn" onclick="clearGraph()">Clear</button>
+    </div>
+    <div class="graph-display" id="graphDisplay"></div>
+    <div class="info" id="graphInfo">Nodes: 0 | Edges: 0</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    let graph = {};
+
+    function addEdge() {
+      const u = document.getElementById('gNode').value.trim().toUpperCase();
+      const v = document.getElementById('gNeighbor').value.trim().toUpperCase();
+      if (!u || !v || u === v) return;
+      if (!graph[u]) graph[u] = [];
+      if (!graph[v]) graph[v] = [];
+      if (!graph[u].includes(v)) graph[u].push(v);
+      if (!graph[v].includes(u)) graph[v].push(u);
+      render();
+    }
+
+    function removeNode() {
+      const u = document.getElementById('gNode').value.trim().toUpperCase();
+      if (!u || !graph[u]) return;
+      // Remove edges to u
+      for (const neighbor of graph[u]) {
+        graph[neighbor] = graph[neighbor].filter(n => n !== u);
+      }
+      delete graph[u];
+      // Clean empty nodes
+      for (const node in graph) { if (graph[node].length === 0) delete graph[node]; }
+      render();
+    }
+
+    function clearGraph() { graph = {}; render(); }
+
+    function render() {
+      const display = document.getElementById('graphDisplay');
+      const info = document.getElementById('graphInfo');
+      const nodes = Object.keys(graph);
+      if (nodes.length === 0) { display.innerHTML = '<div style="color:#475569;">Empty graph</div>'; info.textContent = 'Nodes: 0 | Edges: 0'; return; }
+      let edges = 0;
+      display.innerHTML = nodes.sort().map(node => {
+        const neighbors = graph[node].sort();
+        edges += neighbors.length;
+        return `<div class="g-node"><span class="g-label">${node}</span> <span class="g-arrow">→</span> <span class="g-neighbor">[${neighbors.join(', ') || 'none'}]</span></div>`;
+      }).join('');
+      info.textContent = `Nodes: ${nodes.length} | Edges: ${edges / 2}`;
+    }
+    // Sample
+    ['A','B','C','D'].forEach(n => graph[n] = []);
+    addEdge.call({}); addEdge.call({}); // Add A-B
+    document.getElementById('gNode').value = 'A'; document.getElementById('gNeighbor').value = 'C';
+    addEdge.call({});
+    document.getElementById('gNode').value = 'A'; document.getElementById('gNeighbor').value = 'D';
+    addEdge.call({});
+    render();
+  </script>
+</body>
+</html>
+

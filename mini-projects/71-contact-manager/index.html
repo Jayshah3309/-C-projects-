@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Manager</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;min-height:100vh;background:linear-gradient(135deg,#0f172a,#1e293b);color:#e2e8f0;display:flex;justify-content:center;align-items:center}
+.card{background:rgba(30,41,59,0.9);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;width:min(580px,94vw)}
+h1{margin-bottom:14px;font-size:1.4rem}
+.controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.controls input{padding:8px 10px;border:1px solid #334155;border-radius:6px;background:#0f172a;color:#e2e8f0;font-size:.85rem;outline:none;width:130px}
+.controls input:focus{border-color:#60a5fa}
+.controls button{padding:8px 14px;border:none;border-radius:6px;color:#fff;font-size:.8rem;cursor:pointer;transition:background .2s}
+.search-box{width:100%;padding:10px 14px;border:1px solid #334155;border-radius:8px;background:#0f172a;color:#e2e8f0;font-size:.9rem;outline:none;margin-bottom:10px}
+.search-box:focus{border-color:#60a5fa}
+.contact-list{background:#0f172a;border-radius:8px;max-height:280px;overflow-y:auto}
+.contact-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.contact-item .name{font-weight:600;color:#60a5fa}
+.contact-item .phone{color:#94a3b8;font-size:.85rem}
+.contact-item .del{background:none;border:none;color:#dc2626;cursor:pointer;font-size:.85rem;padding:4px 8px;border-radius:4px}
+.contact-item .del:hover{background:rgba(220,38,38,0.2)}
+.info{color:#94a3b8;font-size:.85rem;margin-top:8px}
+.back{display:inline-block;margin-top:12px;color:#94a3b8;font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>📞 Contact Manager</h1>
+<div class="controls">
+<input type="text" id="conName" placeholder="Name" value="John" />
+<input type="text" id="conPhone" placeholder="Phone" value="555-1234" />
+<button onclick="addContact()" style="background:#2563eb">➕ Add</button>
+<button onclick="exportContacts()" style="background:#7c3aed">📤 Export</button>
+</div>
+<input type="text" class="search-box" id="searchBox" placeholder="Search contacts..." oninput="render()" />
+<div class="contact-list" id="contactList"></div>
+<div class="info" id="conInfo">Contacts: 0</div>
+<a class="back" href="../../index.html">← Back to Hub</a>
+</div>
+<script>
+let contacts = JSON.parse(localStorage.getItem('contacts')) || [
+{name:'Alice Johnson',phone:'555-0101'},{name:'Bob Smith',phone:'555-0102'},{name:'Charlie Brown',phone:'555-0103'}
+];
+function save(){localStorage.setItem('contacts',JSON.stringify(contacts));render();}
+function addContact(){
+const n=document.getElementById('conName').value.trim(),p=document.getElementById('conPhone').value.trim();
+if(!n||!p)return;contacts.push({name:n,phone:p});save();
+}
+function deleteContact(i){contacts.splice(i,1);save();}
+function exportContacts(){
+const csv='Name,Phone\n'+contacts.map(c=>`${c.name},${c.phone}`).join('\n');
+const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');
+a.href=URL.createObjectURL(blob);a.download='contacts.csv';a.click();
+}
+function render(){
+const q=document.getElementById('searchBox').value.toLowerCase();
+const filtered=contacts.filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q));
+document.getElementById('contactList').innerHTML=filtered.map((c,i)=>{
+const idx=contacts.indexOf(c);
+return `<div class="contact-item"><div><div class="name">${c.name}</div><div class="phone">${c.phone}</div></div><button class="del" onclick="deleteContact(${idx})">✕</button></div>`;
+}).join('')||'<div style="color:#475569;padding:20px;text-align:center">No contacts found</div>';
+document.getElementById('conInfo').textContent=`Contacts: ${contacts.length} (showing ${filtered.length})`;
+}
+render();
+</script>
+</div>
+</body>
+</html>
+

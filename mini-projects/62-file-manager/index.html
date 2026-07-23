@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Manager</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; width: min(580px, 94vw); }
+    h1 { margin-bottom: 16px; font-size: 1.4rem; }
+    .path-bar { background: #0f172a; padding: 8px 14px; border-radius: 6px; margin-bottom: 12px; font-family: monospace; font-size: .9rem; color: #60a5fa; }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .controls input { padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .85rem; outline: none; width: 120px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 8px 12px; border: none; border-radius: 6px; color: #fff; font-size: .8rem; cursor: pointer; transition: background .2s; }
+    .file-list { background: #0f172a; border-radius: 8px; padding: 8px; min-height: 160px; max-height: 260px; overflow-y: auto; }
+    .file-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; border-radius: 4px; cursor: pointer; transition: background .1s; }
+    .file-item:hover { background: rgba(96,165,250,0.08); }
+    .file-item .name { font-family: monospace; }
+    .file-item .type { color: #94a3b8; font-size: .8rem; }
+    .file-item .del-btn { background: none; border: none; color: #dc2626; cursor: pointer; font-size: .85rem; padding: 2px 6px; border-radius: 4px; }
+    .file-item .del-btn:hover { background: rgba(220,38,38,0.2); }
+    .info { color: #94a3b8; font-size: .85rem; margin-top: 8px; }
+    .back { display: inline-block; margin-top: 12px; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📁 File Manager</h1>
+    <div class="path-bar" id="pathBar">/home/user/</div>
+    <div class="controls">
+      <input type="text" id="fileName" value="new-file.txt" placeholder="Filename" />
+      <button onclick="createFile()" style="background:#2563eb">Create</button>
+      <button onclick="createDir()" style="background:#7c3aed">New Folder</button>
+      <button onclick="parentDir()" style="background:#475569">⬆ Up</button>
+    </div>
+    <div class="file-list" id="fileList"></div>
+    <div class="info" id="fileInfo">Items: 0</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    let path = ['home', 'user'];
+    let files = { 'home': { 'user': {} } };
+    
+    function getDir() {
+      let d = files;
+      for (const p of path) { if (!d[p]) d[p] = {}; d = d[p]; }
+      return d;
+    }
+
+    function render() {
+      const dir = getDir();
+      const el = document.getElementById('fileList');
+      document.getElementById('pathBar').textContent = '/' + path.join('/') + '/';
+      const entries = Object.entries(dir);
+      document.getElementById('fileInfo').textContent = `Items: ${entries.length}`;
+      if (entries.length === 0) { el.innerHTML = '<div style="color:#475569;padding:20px;text-align:center">Empty directory</div>'; return; }
+      el.innerHTML = entries.map(([name, val]) => {
+        const isDir = typeof val === 'object' && !val.content;
+        return `<div class="file-item" ${isDir ? `ondblclick="enterDir('${name}')"` : ''}>
+          <span class="name">${isDir ? '📁' : '📄'} ${name}</span>
+          <span class="type">${isDir ? 'folder' : typeof val === 'object' ? val.type || 'file' : 'file'}</span>
+          <button class="del-btn" onclick="deleteItem('${name}')">✕</button>
+        </div>`;
+      }).join('');
+    }
+
+    function createFile() {
+      const name = document.getElementById('fileName').value.trim();
+      if (!name) return;
+      const dir = getDir();
+      if (dir[name]) { alert('Already exists'); return; }
+      dir[name] = { content: '', type: 'text' };
+      render();
+    }
+
+    function createDir() {
+      const name = document.getElementById('fileName').value.trim();
+      if (!name) return;
+      const dir = getDir();
+      if (dir[name]) { alert('Already exists'); return; }
+      dir[name] = {};
+      render();
+    }
+
+    function deleteItem(name) {
+      const dir = getDir();
+      delete dir[name];
+      render();
+    }
+
+    function enterDir(name) {
+      const dir = getDir();
+      if (dir[name] && typeof dir[name] === 'object' && !dir[name].content) { path.push(name); render(); }
+    }
+
+    function parentDir() {
+      if (path.length > 1) { path.pop(); render(); }
+    }
+
+    render();
+  </script>
+</body>
+</html>
+

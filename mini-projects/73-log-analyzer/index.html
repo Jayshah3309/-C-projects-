@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log Analyzer</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;min-height:100vh;background:linear-gradient(135deg,#0f172a,#1e293b);color:#e2e8f0;display:flex;justify-content:center;align-items:center}
+.card{background:rgba(30,41,59,0.9);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;width:min(640px,94vw)}
+h1{margin-bottom:12px;font-size:1.4rem}
+.subtitle{color:#94a3b8;font-size:.85rem;margin-bottom:14px}
+textarea{width:100%;padding:10px 14px;border:1px solid #334155;border-radius:8px;background:#0f172a;color:#e2e8f0;font-size:.85rem;outline:none;resize:vertical;min-height:120px;font-family:monospace}
+textarea:focus{border-color:#60a5fa}
+button{padding:10px 24px;border:none;border-radius:8px;color:#fff;font-size:.9rem;cursor:pointer;margin:6px 0;transition:background .2s}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.stat-box{background:#0f172a;border-radius:8px;padding:12px;text-align:center}
+.stat-box .num{font-size:1.5rem;font-weight:700;color:#60a5fa}
+.stat-box .lbl{font-size:.75rem;color:#94a3b8}
+.log-output{background:#0f172a;border-radius:8px;padding:12px;max-height:200px;overflow-y:auto;margin-bottom:8px;font-family:monospace;font-size:.8rem;line-height:1.5}
+.log-line .warn{color:#fb923c}.log-line .error{color:#dc2626}.log-line .info{color:#4ade80}
+.info{color:#94a3b8;font-size:.85rem}
+.back{display:inline-block;margin-top:10px;color:#94a3b8;font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>📊 Log Analyzer</h1>
+<p class="subtitle">Parse and analyze log entries</p>
+<textarea id="logInput" rows="4">[INFO] Server started on port 8080
+[WARN] Memory usage above 80%
+[ERROR] Failed to connect to database
+[INFO] Request processed in 45ms
+[ERROR] Timeout while waiting for response
+[INFO] User login successful
+[WARN] Disk space running low</textarea>
+<button onclick="analyze()" style="background:#2563eb">Analyze Logs</button>
+<div class="stats"><div class="stat-box"><div class="num" id="totalLogs">7</div><div class="lbl">Total</div></div><div class="stat-box"><div class="num" id="infoCount">3</div><div class="lbl" style="color:#4ade80">Info</div></div><div class="stat-box"><div class="num" id="warnCount">2</div><div class="lbl" style="color:#fb923c">Warn</div></div><div class="stat-box"><div class="num" id="errorCount">2</div><div class="lbl" style="color:#dc2626">Error</div></div></div>
+<div class="log-output" id="logOutput"></div>
+<div class="info" id="logInfo">Click Analyze to parse logs</div>
+<a class="back" href="../../index.html">← Back to Hub</a>
+</div>
+<script>
+function analyze(){
+const text=document.getElementById('logInput').value;
+const lines=text.split('\n').filter(l=>l.trim());
+let info=0,warn=0,error=0,other=0;
+const outEl=document.getElementById('logOutput');
+outEl.innerHTML=lines.map(line=>{
+let cls='';
+if(line.includes('[INFO]')){cls='info';info++;}
+else if(line.includes('[WARN]')){cls='warn';warn++;}
+else if(line.includes('[ERROR]')){cls='error';error++;}
+else other++;
+return `<div class="log-line ${cls}">${line}</div>`;
+}).join('');
+document.getElementById('totalLogs').textContent=lines.length;
+document.getElementById('infoCount').textContent=info;
+document.getElementById('warnCount').textContent=warn;
+document.getElementById('errorCount').textContent=error;
+document.getElementById('logInfo').textContent=`Parsed ${lines.length} log entries`;
+}
+analyze();
+</script>
+</body>
+</html>
+

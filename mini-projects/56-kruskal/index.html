@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kruskal's Algorithm</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(580px, 94vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .graph-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 60px; margin-bottom: 8px; text-align: left; font-family: monospace; font-size: .85rem; line-height: 1.6; }
+    .result-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 40px; margin-bottom: 8px; }
+    .edge-item { display: inline-block; background: #1e3a5f; color: #7fffd4; padding: 4px 10px; border-radius: 4px; margin: 3px; font-weight: 600; font-size: .85rem; }
+    .edge-item.selected { background: #059669; color: #fff; }
+    .info { color: #94a3b8; font-size: .85rem; }
+    button { padding: 10px 24px; background: #2563eb; border: none; border-radius: 8px; color: #fff; font-size: 1rem; cursor: pointer; margin-bottom: 14px; transition: background .2s; }
+    button:hover { background: #1d4ed8; }
+    .back { margin-top: 14px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🌲 Kruskal's Algorithm (MST)</h1>
+    <p class="subtitle">Find Minimum Spanning Tree using Union-Find</p>
+    <button onclick="runKruskal()">Find MST</button>
+    <div class="graph-display" id="graphDisplay"></div>
+    <div class="result-display" id="resultDisplay"></div>
+    <div class="info" id="kruskalInfo"></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    const edges = [
+      ['A', 'B', 4], ['A', 'C', 2], ['B', 'C', 1],
+      ['B', 'D', 5], ['C', 'D', 8], ['C', 'E', 10],
+      ['D', 'E', 2], ['D', 'F', 6], ['E', 'F', 3]
+    ];
+
+    function find(parent, x) {
+      if (parent[x] !== x) parent[x] = find(parent, parent[x]);
+      return parent[x];
+    }
+
+    function union(parent, rank, x, y) {
+      const rx = find(parent, x), ry = find(parent, y);
+      if (rx === ry) return false;
+      if (rank[rx] < rank[ry]) parent[rx] = ry;
+      else if (rank[rx] > rank[ry]) parent[ry] = rx;
+      else { parent[ry] = rx; rank[rx]++; }
+      return true;
+    }
+
+    function runKruskal() {
+      const sorted = [...edges].sort((a, b) => a[2] - b[2]);
+      const nodes = new Set(sorted.flatMap(e => [e[0], e[1]]));
+      const parent = {}, rank = {};
+      for (const n of nodes) { parent[n] = n; rank[n] = 0; }
+
+      const mst = [];
+      let totalWeight = 0;
+      for (const [u, v, w] of sorted) {
+        if (union(parent, rank, u, v)) {
+          mst.push([u, v, w]);
+          totalWeight += w;
+        }
+      }
+
+      const resultDisplay = document.getElementById('resultDisplay');
+      resultDisplay.innerHTML = mst.map(([u, v, w], i) =>
+        `<span class="edge-item selected">${u}—${v} (${w})</span>`
+      ).join('');
+      document.getElementById('kruskalInfo').textContent = `MST Edges: ${mst.length} | Total Weight: ${totalWeight}`;
+    }
+
+    document.getElementById('graphDisplay').innerHTML = edges.map(([u, v, w]) =>
+      `<span class="edge-item">${u}—${v} (${w})</span>`
+    ).join('');
+  </script>
+</body>
+</html>
+

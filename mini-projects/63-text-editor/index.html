@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text Editor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; width: min(680px, 94vw); }
+    h1 { margin-bottom: 12px; font-size: 1.4rem; }
+    .toolbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .toolbar button { padding: 6px 14px; border: none; border-radius: 6px; color: #fff; font-size: .8rem; cursor: pointer; transition: background .2s; }
+    .toolbar select { padding: 6px 10px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .8rem; outline: none; }
+    textarea { width: 100%; height: 320px; padding: 14px; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: #e2e8f0; font-size: .95rem; font-family: 'Consolas', monospace; outline: none; resize: vertical; line-height: 1.6; }
+    textarea:focus { border-color: #60a5fa; }
+    .status { display: flex; justify-content: space-between; color: #94a3b8; font-size: .8rem; margin-top: 8px; }
+    .back { display: inline-block; margin-top: 12px; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📝 Text Editor</h1>
+    <div class="toolbar">
+      <button onclick="execCmd('bold')" style="background:#2563eb" title="Bold"><b>B</b></button>
+      <button onclick="execCmd('italic')" style="background:#7c3aed" title="Italic"><i>I</i></button>
+      <button onclick="execCmd('underline')" style="background:#059669" title="Underline"><u>U</u></button>
+      <select onchange="changeFont(this.value)">
+        <option value="Consolas,monospace">Monospace</option>
+        <option value="Arial,sans-serif">Arial</option>
+        <option value="'Times New Roman',serif">Times</option>
+      </select>
+      <button onclick="downloadText()" style="background:#2563eb">💾 Save</button>
+      <button onclick="clearText()" style="background:#dc2626">🗑 Clear</button>
+      <button onclick="loadSample()" style="background:#475569">📄 Sample</button>
+      <input type="color" id="colorPicker" value="#60a5fa" onchange="changeColor(this.value)" style="width:32px;height:32px;padding:2px;border-radius:6px;background:#0f172a;border:1px solid #334155;cursor:pointer" />
+    </div>
+    <textarea id="editor">Start typing here...</textarea>
+    <div class="status">
+      <span id="wordCount">Words: 3</span>
+      <span id="charCount">Chars: 20</span>
+      <span id="lineCount">Lines: 1</span>
+    </div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    const editor = document.getElementById('editor');
+    function updateStats() {
+      const text = editor.value;
+      document.getElementById('wordCount').textContent = `Words: ${text.trim() ? text.trim().split(/\s+/).length : 0}`;
+      document.getElementById('charCount').textContent = `Chars: ${text.length}`;
+      document.getElementById('lineCount').textContent = `Lines: ${text.split('\n').length}`;
+    }
+    function execCmd(cmd) {
+      const start = editor.selectionStart, end = editor.selectionEnd;
+      const selected = editor.value.substring(start, end);
+      const wrap = { bold: ['**', '**'], italic: ['*', '*'], underline: ['<u>', '</u>'] }[cmd];
+      editor.value = editor.value.substring(0, start) + wrap[0] + selected + wrap[1] + editor.value.substring(end);
+      updateStats();
+    }
+    function changeFont(font) { editor.style.fontFamily = font; }
+    function changeColor(color) { editor.style.color = color; }
+    function downloadText() {
+      const blob = new Blob([editor.value], { type: 'text/plain' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'document.txt'; a.click();
+    }
+    function clearText() { if (confirm('Clear all text?')) { editor.value = ''; updateStats(); } }
+    function loadSample() { editor.value = `Hello, this is a sample document.\n\nYou can edit this text freely.\n\nFeatures:\n- Bold with **text**\n- Italic with *text*\n- Color picker\n- Download as .txt`; updateStats(); }
+    editor.addEventListener('input', updateStats);
+    updateStats();
+  </script>
+</body>
+</html>
+

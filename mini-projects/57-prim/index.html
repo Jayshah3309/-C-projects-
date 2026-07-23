@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prim's Algorithm</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(580px, 94vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .controls { display: flex; gap: 6px; justify-content: center; margin-bottom: 14px; }
+    .controls input { padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .9rem; outline: none; width: 80px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 8px 16px; background: #2563eb; border: none; border-radius: 6px; color: #fff; font-size: .85rem; cursor: pointer; transition: background .2s; }
+    .controls button:hover { background: #1d4ed8; }
+    .graph-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 40px; margin-bottom: 8px; font-size: .85rem; }
+    .result-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 40px; margin-bottom: 8px; }
+    .edge-item { display: inline-block; background: #1e3a5f; color: #7fffd4; padding: 4px 10px; border-radius: 4px; margin: 3px; font-weight: 600; font-size: .85rem; }
+    .edge-item.selected { background: #059669; color: #fff; }
+    .info { color: #94a3b8; font-size: .85rem; }
+    .back { margin-top: 14px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🌲 Prim's Algorithm (MST)</h1>
+    <p class="subtitle">Build MST starting from a root node</p>
+    <div class="controls">
+      <input type="text" id="startNode" value="A" placeholder="Start" style="width:60px" />
+      <button onclick="runPrim()">Find MST</button>
+    </div>
+    <div class="graph-display" id="graphDisplay"></div>
+    <div class="result-display" id="resultDisplay"></div>
+    <div class="info" id="primInfo"></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    const wGraph = {
+      'A': {'B': 4, 'C': 2},
+      'B': {'A': 4, 'C': 1, 'D': 5},
+      'C': {'A': 2, 'B': 1, 'D': 8, 'E': 10},
+      'D': {'B': 5, 'C': 8, 'E': 2, 'F': 6},
+      'E': {'C': 10, 'D': 2, 'F': 3},
+      'F': {'D': 6, 'E': 3}
+    };
+
+    function runPrim() {
+      const start = document.getElementById('startNode').value.trim().toUpperCase();
+      if (!wGraph[start]) { alert('Node not in graph!'); return; }
+
+      const visited = new Set([start]);
+      const mst = [];
+      let totalWeight = 0;
+
+      while (visited.size < Object.keys(wGraph).length) {
+        let minEdge = null;
+        let minWeight = Infinity;
+        for (const u of visited) {
+          for (const [v, w] of Object.entries(wGraph[u])) {
+            if (!visited.has(v) && w < minWeight) {
+              minWeight = w;
+              minEdge = [u, v, w];
+            }
+          }
+        }
+        if (!minEdge) break;
+        mst.push(minEdge);
+        totalWeight += minWeight;
+        visited.add(minEdge[1]);
+      }
+
+      const resultDisplay = document.getElementById('resultDisplay');
+      resultDisplay.innerHTML = mst.map(([u, v, w]) =>
+        `<span class="edge-item selected">${u}—${v} (${w})</span>`
+      ).join('');
+      document.getElementById('primInfo').textContent = `MST from ${start}: ${mst.length} edges | Total: ${totalWeight}`;
+    }
+
+    // Show graph
+    document.getElementById('graphDisplay').innerHTML = Object.entries(wGraph).map(([node, neighbors]) =>
+      `<div>${node} → ${Object.entries(neighbors).map(([n, w]) => `${n}(${w})`).join(', ')}</div>`
+    ).join('');
+  </script>
+</body>
+</html>
+

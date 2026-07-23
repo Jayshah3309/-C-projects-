@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stack</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(450px, 90vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 16px; }
+    .controls input { padding: 10px 14px; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: #e2e8f0; font-size: 1rem; outline: none; width: 120px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 10px 16px; border: none; border-radius: 8px; color: #fff; font-size: .9rem; cursor: pointer; transition: background .2s; }
+    .push-btn { background: #2563eb; } .push-btn:hover { background: #1d4ed8; }
+    .pop-btn { background: #dc2626; } .pop-btn:hover { background: #b91c1c; }
+    .peek-btn { background: #7c3aed; } .peek-btn:hover { background: #6d28d9; }
+    .clear-btn { background: #475569; } .clear-btn:hover { background: #64748b; }
+    .stack-display { display: flex; flex-direction: column-reverse; align-items: center; gap: 4px; min-height: 200px; max-height: 300px; overflow-y: auto; background: #0f172a; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+    .stack-item { background: #1e3a5f; color: #60a5fa; padding: 8px 20px; border-radius: 6px; font-weight: 600; font-family: monospace; font-size: 1.1rem; width: 80%; text-align: center; }
+    .stack-item.top { border: 2px solid #60a5fa; }
+    .info { color: #94a3b8; font-size: .9rem; }
+    .back { margin-top: 16px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📚 Stack (LIFO)</h1>
+    <p class="subtitle">Last-In, First-Out data structure</p>
+    <div class="controls">
+      <input type="number" id="stackInput" value="42" placeholder="Value" />
+      <button class="push-btn" onclick="push()">Push</button>
+      <button class="pop-btn" onclick="pop()">Pop</button>
+      <button class="peek-btn" onclick="peek()">Peek</button>
+      <button class="clear-btn" onclick="clearStack()">Clear</button>
+    </div>
+    <div class="stack-display" id="stackDisplay"></div>
+    <div class="info" id="stackInfo">Stack is empty</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    const stack = [];
+    function render() {
+      const display = document.getElementById('stackDisplay');
+      const info = document.getElementById('stackInfo');
+      if (stack.length === 0) { display.innerHTML = '<div style="color:#475569;padding:40px 0">Stack is empty</div>'; info.textContent = 'Size: 0 | Top: none'; return; }
+      display.innerHTML = stack.map((val, i) => `<div class="stack-item${i === stack.length - 1 ? ' top' : ''}">${val} ${i === stack.length - 1 ? '⬅ TOP' : ''}</div>`).join('');
+      info.textContent = `Size: ${stack.length} | Top: ${stack[stack.length - 1]}`;
+    }
+    function push() {
+      const val = document.getElementById('stackInput').value;
+      if (val === '') return;
+      stack.push(isNaN(Number(val)) ? val : Number(val));
+      render(); document.getElementById('stackInput').value = ''; document.getElementById('stackInput').focus();
+    }
+    function pop() {
+      if (stack.length === 0) { alert('Stack is empty!'); return; }
+      stack.pop(); render();
+    }
+    function peek() {
+      if (stack.length === 0) { alert('Stack is empty!'); return; }
+      alert(`Top element: ${stack[stack.length - 1]}`);
+    }
+    function clearStack() { stack.length = 0; render(); }
+    render();
+  </script>
+</body>
+</html>
+

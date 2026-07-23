@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini Shell</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Consolas', monospace; min-height: 100vh; background: #0a0e14; color: #c0caf5; display: flex; justify-content: center; align-items: center; }
+    .card { background: #131a24; border: 1px solid #2a3a4a; border-radius: 12px; padding: 20px; width: min(640px, 94vw); }
+    h1 { color: #7aa2f7; font-size: 1.3rem; margin-bottom: 12px; font-family: 'Segoe UI', sans-serif; }
+    .terminal { background: #0a0e14; border-radius: 8px; padding: 12px; min-height: 320px; max-height: 420px; overflow-y: auto; font-size: .85rem; line-height: 1.6; margin-bottom: 10px; }
+    .output-line { white-space: pre-wrap; word-break: break-all; }
+    .prompt { color: #9ece6a; }
+    .cmd { color: #c0caf5; }
+    .error { color: #f7768e; }
+    .info { color: #565f89; font-size: .8rem; }
+    .input-line { display: flex; align-items: center; gap: 6px; }
+    .input-line span { color: #9ece6a; }
+    .input-line input { flex: 1; background: transparent; border: none; color: #c0caf5; font-family: 'Consolas', monospace; font-size: .85rem; outline: none; }
+    .back { display: inline-block; margin-top: 10px; color: #565f89; font-size: .85rem; font-family: 'Segoe UI', sans-serif; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>💻 Mini Shell</h1>
+    <div class="terminal" id="terminal">
+      <div class="output-line"><span class="info">Welcome to Mini Shell. Type 'help' for commands.</span></div>
+    </div>
+    <div class="input-line">
+      <span>$</span>
+      <input type="text" id="cmdInput" placeholder="Type a command..." autofocus />
+    </div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    const terminal = document.getElementById('terminal');
+    const input = document.getElementById('cmdInput');
+    const fs = { '/': { type: 'dir', children: { 'home': { type: 'dir', children: { 'user': { type: 'dir', children: {} } } }, 'tmp': { type: 'dir', children: {} } } } };
+    let cwd = '/home/user';
+    const history = [];
+    
+    function print(line, cls = '') {
+      const div = document.createElement('div');
+      div.className = 'output-line ' + cls;
+      div.innerHTML = line;
+      terminal.appendChild(div);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function execute(cmd) {
+      const parts = cmd.trim().split(/\s+/);
+      const command = parts[0].toLowerCase();
+      const args = parts.slice(1);
+      if (!cmd.trim()) return;
+      history.push(cmd);
+      print(`<span class="prompt">${cwd}$</span> <span class="cmd">${cmd}</span>`);
+      
+      switch(command) {
+        case 'help':
+          print('Available: help, echo, pwd, ls, cd, cat, mkdir, touch, rm, clear, date, whoami, exit');
+          break;
+        case 'echo': print(args.join(' ')); break;
+        case 'pwd': print(cwd); break;
+        case 'date': print(new Date().toString()); break;
+        case 'whoami': print('user'); break;
+        case 'clear': terminal.innerHTML = ''; break;
+        case 'exit': print('Goodbye!'); break;
+        case 'ls':
+          if (cwd === '/') print('home  tmp');
+          else if (cwd === '/home') print('user');
+          else if (cwd === '/home/user') print('(empty)');
+          else if (cwd === '/tmp') print('(empty)');
+          else print('No such directory', 'error');
+          break;
+        case 'cd':
+          if (!args[0] || args[0] === '~') cwd = '/home/user';
+          else if (args[0] === '..') cwd = cwd.substring(0, cwd.lastIndexOf('/')) || '/';
+          else if (args[0] === '/') cwd = '/';
+          else cwd = cwd + '/' + args[0];
+          break;
+        default:
+          print(`Command not found: ${command}`, 'error');
+      }
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { execute(input.value); input.value = ''; }
+    });
+    print('Type <span class="info">help</span> to see available commands.');
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matrix Transpose</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(700px, 95vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 20px; font-size: 1.8rem; }
+    .row-group { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
+    .group { text-align: left; min-width: 80px; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: 0.85rem; }
+    input { width: 100%; padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; text-align: center; outline: none; }
+    input:focus { border-color: #60a5fa; }
+    .matrices { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; }
+    .matrix-box { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; }
+    .matrix-box h3 { font-size: 0.95rem; color: #94a3b8; margin-bottom: 8px; }
+    .matrix-box td { padding: 3px; }
+    .matrix-box input { width: 50px; padding: 4px; text-align: center; }
+    .result-box td { padding: 6px 14px; border: 1px solid #334155; color: #60a5fa; font-weight: 600; text-align: center; min-width: 44px; }
+    .result-box table { margin: 0 auto; border-collapse: collapse; }
+    button { padding: 10px 28px; background: #2563eb; border: none; border-radius: 8px; color: #fff; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+    button:hover { background: #1d4ed8; }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+    .arrow { font-size: 2rem; color: #60a5fa; display: flex; align-items: center; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔄 Matrix Transpose</h1>
+    <div class="row-group">
+      <div class="group"><label>Rows</label><input type="number" id="rows" value="3" min="1" max="6" /></div>
+      <div class="group"><label>Columns</label><input type="number" id="cols" value="4" min="1" max="6" /></div>
+      <button onclick="build()">Set</button>
+    </div>
+    <div class="matrices" id="matrices"></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function build() {
+      const r = Math.min(6, Math.max(1, parseInt(document.getElementById('rows').value) || 3));
+      const c = Math.min(6, Math.max(1, parseInt(document.getElementById('cols').value) || 4));
+      document.getElementById('rows').value = r; document.getElementById('cols').value = c;
+      const m = document.getElementById('matrices');
+      let inputHtml = `<div class="matrix-box"><h3>Original (${r}×${c})</h3><table>`;
+      for (let i = 0; i < r; i++) {
+        inputHtml += '<tr>';
+        for (let j = 0; j < c; j++) inputHtml += `<td><input type="number" id="M${i}${j}" value="${i * c + j + 1}" oninput="transpose()" /></td>`;
+        inputHtml += '</tr>';
+      }
+      inputHtml += '</table></div><div class="arrow">→</div><div class="matrix-box"><h3>Transpose (${c}×${r})</h3><table id="transposeTable">';
+      for (let i = 0; i < c; i++) {
+        inputHtml += '<tr>';
+        for (let j = 0; j < r; j++) inputHtml += `<td class="result-box" style="padding:6px 14px;border:1px solid #334155;color:#4ade80;font-weight:600;text-align:center;min-width:44px" id="T${i}${j}">--</td>`;
+        inputHtml += '</tr>';
+      }
+      m.innerHTML = inputHtml + '</table></div>';
+      transpose();
+    }
+    function transpose() {
+      const r = parseInt(document.getElementById('rows').value);
+      const c = parseInt(document.getElementById('cols').value);
+      for (let i = 0; i < c; i++) {
+        for (let j = 0; j < r; j++) {
+          const val = parseFloat(document.getElementById(`M${j}${i}`).value) || 0;
+          document.getElementById(`T${i}${j}`).textContent = val.toFixed(1);
+        }
+      }
+    }
+    build();
+  </script>
+</body>
+</html>
+

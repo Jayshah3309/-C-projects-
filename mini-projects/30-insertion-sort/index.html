@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Insertion Sort</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(540px, 90vw); text-align: center; }
+    h1 { margin-bottom: 16px; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: .9rem; }
+    textarea { width: 100%; padding: 10px 14px; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: #e2e8f0; font-size: 1rem; outline: none; resize: vertical; min-height: 60px; font-family: monospace; }
+    textarea:focus { border-color: #60a5fa; }
+    button { width: 100%; padding: 12px; background: #2563eb; border: none; border-radius: 8px; color: #fff; font-size: 1rem; cursor: pointer; transition: background .2s; margin-top: 4px; }
+    button:hover { background: #1d4ed8; }
+    .result { margin-top: 18px; padding: 14px; background: #0f172a; border-radius: 8px; font-size: 1rem; min-height: 3em; line-height: 1.8; }
+    .sorted { color: #4ade80; font-weight: 700; }
+    .info { color: #94a3b8; font-size: .85rem; }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📌 Insertion Sort</h1>
+    <div class="group"><label>Array (comma-separated)</label><textarea id="arrayInput" rows="2">12, 11, 13, 5, 6, 7, 1, 9</textarea></div>
+    <button onclick="sortArray()">Sort</button>
+    <div class="result" id="result">Click Sort to begin</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function sortArray() {
+      let arr = document.getElementById('arrayInput').value.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+      const el = document.getElementById('result');
+      if (arr.length === 0) { el.innerHTML = '❌ Enter valid numbers'; return; }
+      const original = [...arr];
+      const n = arr.length;
+      let shifts = 0;
+      for (let i = 1; i < n; i++) {
+        let key = arr[i], j = i - 1;
+        while (j >= 0 && arr[j] > key) { arr[j + 1] = arr[j]; j--; shifts++; }
+        arr[j + 1] = key;
+      }
+      el.innerHTML = `<div class="sorted">✅ Sorted: [${arr.join(', ')}]</div><div class="info">Original: [${original.join(', ')}] | Shifts: ${shifts}</div>`;
+    }
+  </script>
+</body>
+</html>
+

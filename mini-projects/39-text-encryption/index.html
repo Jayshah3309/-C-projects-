@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text Encryption</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(540px, 90vw); text-align: center; }
+    h1 { margin-bottom: 16px; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: .9rem; }
+    textarea { width: 100%; padding: 10px 14px; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: #e2e8f0; font-size: 1rem; outline: none; resize: vertical; min-height: 70px; font-family: monospace; }
+    textarea:focus { border-color: #60a5fa; }
+    input { width: 100%; padding: 10px 14px; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: #e2e8f0; font-size: 1rem; outline: none; }
+    input:focus { border-color: #60a5fa; }
+    .row { display: flex; gap: 10px; }
+    .row button { flex: 1; padding: 12px; border: none; border-radius: 8px; color: #fff; font-size: 1rem; cursor: pointer; transition: background .2s; margin-top: 4px; }
+    .enc-btn { background: #2563eb; } .enc-btn:hover { background: #1d4ed8; }
+    .dec-btn { background: #7c3aed; } .dec-btn:hover { background: #6d28d9; }
+    .result { margin-top: 18px; padding: 14px; background: #0f172a; border-radius: 8px; font-size: 1rem; min-height: 3em; word-break: break-all; }
+    .out-text { color: #60a5fa; }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔐 Text Encryption (Base64)</h1>
+    <p style="color:#94a3b8;margin-bottom:12px;font-size:.9rem">Encode &amp; decode text using Base64</p>
+    <div class="group"><label>Text</label><textarea id="textInput" rows="2">Hello World! This is a secret message.</textarea></div>
+    <div class="row"><button class="enc-btn" onclick="encode()">🔒 Encode (Base64)</button><button class="dec-btn" onclick="decode()">🔓 Decode (Base64)</button></div>
+    <div class="result" id="result"><span class="out-text">SGVsbG8gV29ybGQhIFRoaXMgaXMgYSBzZWNyZXQgbWVzc2FnZS4=</span></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function encode() {
+      const text = document.getElementById('textInput').value;
+      document.getElementById('result').innerHTML = `<span class="out-text">${btoa(text)}</span>`;
+    }
+    function decode() {
+      const text = document.getElementById('textInput').value;
+      try { document.getElementById('result').innerHTML = `<span class="out-text">${atob(text)}</span>`; }
+      catch { document.getElementById('result').innerHTML = '<span style="color:#fb923c">❌ Invalid Base64</span>'; }
+    }
+  </script>
+</body>
+</html>
+

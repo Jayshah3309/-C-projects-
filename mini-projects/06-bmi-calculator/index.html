@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BMI Calculator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(420px, 90vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 20px; font-size: 1.8rem; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: 0.9rem; }
+    input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 1rem;
+      outline: none;
+    }
+    input:focus { border-color: #60a5fa; }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1d4ed8; }
+    .result {
+      margin-top: 18px;
+      padding: 14px;
+      background: #0f172a;
+      border-radius: 8px;
+      font-size: 1.3rem;
+      min-height: 3em;
+    }
+    .result .bmi-value { font-size: 2rem; font-weight: 700; }
+    .result .category { margin-top: 4px; font-size: 1rem; }
+    .underweight { color: #facc15; }
+    .normal { color: #4ade80; }
+    .overweight { color: #fb923c; }
+    .obese { color: #f87171; }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>⚖️ BMI Calculator</h1>
+    <div class="group">
+      <label>Weight (kg)</label>
+      <input type="number" id="weight" value="70" step="0.1" />
+    </div>
+    <div class="group">
+      <label>Height (cm)</label>
+      <input type="number" id="height" value="175" step="0.1" />
+    </div>
+    <button onclick="calculate()">Calculate BMI</button>
+    <div class="result" id="result"><div class="bmi-value">--</div><div class="category">--</div></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function calculate() {
+      const w = parseFloat(document.getElementById('weight').value);
+      const h = parseFloat(document.getElementById('height').value) / 100;
+      if (isNaN(w) || w <= 0 || isNaN(h) || h <= 0) { document.getElementById('result').innerHTML = '<div class="bmi-value">❌</div><div class="category">Invalid values</div>'; return; }
+      const bmi = w / (h * h);
+      let cat, cls;
+      if (bmi < 18.5) { cat = 'Underweight'; cls = 'underweight'; }
+      else if (bmi < 25) { cat = 'Normal weight'; cls = 'normal'; }
+      else if (bmi < 30) { cat = 'Overweight'; cls = 'overweight'; }
+      else { cat = 'Obese'; cls = 'obese'; }
+      document.getElementById('result').innerHTML = `<div class="bmi-value">${bmi.toFixed(1)}</div><div class="category ${cls}">${cat}</div>`;
+    }
+    calculate();
+  </script>
+</body>
+</html>
+

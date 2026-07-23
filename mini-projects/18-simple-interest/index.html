@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Interest Calculator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(440px, 90vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 20px; font-size: 1.8rem; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: 0.9rem; }
+    input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 1rem;
+      outline: none;
+    }
+    input:focus { border-color: #60a5fa; }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1d4ed8; }
+    .result {
+      margin-top: 18px;
+      padding: 16px;
+      background: #0f172a;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      min-height: 3em;
+    }
+    .result .si { font-size: 1.8rem; font-weight: 700; color: #4ade80; }
+    .result .total { font-size: 1.3rem; color: #60a5fa; margin-top: 4px; }
+    .result .formula { font-size: 0.85rem; color: #94a3b8; margin-top: 6px; }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>💰 Simple Interest Calculator</h1>
+    <div class="group">
+      <label>Principal (P)</label>
+      <input type="number" id="principal" value="10000" step="100" />
+    </div>
+    <div class="group">
+      <label>Rate of Interest (R % per annum)</label>
+      <input type="number" id="rate" value="8" step="0.1" />
+    </div>
+    <div class="group">
+      <label>Time (T in years)</label>
+      <input type="number" id="time" value="3" step="0.5" />
+    </div>
+    <button onclick="calculate()">Calculate Simple Interest</button>
+    <div class="result" id="result">
+      <div class="si">₹ 2,400.00</div>
+      <div class="total">Total Amount: ₹ 12,400.00</div>
+      <div class="formula">SI = (10000 × 8 × 3) / 100</div>
+    </div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function calculate() {
+      const p = parseFloat(document.getElementById('principal').value);
+      const r = parseFloat(document.getElementById('rate').value);
+      const t = parseFloat(document.getElementById('time').value);
+      const el = document.getElementById('result');
+      if (isNaN(p) || p < 0 || isNaN(r) || r < 0 || isNaN(t) || t < 0) { el.innerHTML = '<div class="si">❌</div><div class="total">Enter valid positive values</div>'; return; }
+      const si = (p * r * t) / 100;
+      const total = p + si;
+      el.innerHTML = `<div class="si">₹ ${si.toFixed(2)}</div><div class="total">Total Amount: ₹ ${total.toFixed(2)}</div><div class="formula">SI = (${p} × ${r} × ${t}) / 100</div>`;
+    }
+    calculate();
+  </script>
+</body>
+</html>
+

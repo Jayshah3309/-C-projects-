@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Number Guessing Game</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(440px, 90vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 8px; font-size: 1.8rem; }
+    .subtitle { color: #94a3b8; margin-bottom: 20px; font-size: 0.95rem; }
+    .range-badge {
+      display: inline-block;
+      background: #1e3a5f;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-weight: 600;
+      color: #60a5fa;
+      margin-bottom: 16px;
+    }
+    .guess-row { display: flex; gap: 10px; }
+    .guess-row input {
+      flex: 1;
+      padding: 12px 14px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 1.2rem;
+      text-align: center;
+      outline: none;
+    }
+    .guess-row input:focus { border-color: #60a5fa; }
+    .guess-row button {
+      padding: 12px 24px;
+      background: #2563eb;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .guess-row button:hover { background: #1d4ed8; }
+    .message {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      min-height: 3.5em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .message .hint { font-weight: 400; font-size: 0.95rem; margin-top: 4px; }
+    .low { background: rgba(251, 146, 60, 0.15); color: #fb923c; }
+    .high { background: rgba(251, 146, 60, 0.15); color: #fb923c; }
+    .correct { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+    .stats {
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+    .reset-btn {
+      margin-top: 12px;
+      padding: 8px 20px;
+      background: #334155;
+      border: none;
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .reset-btn:hover { background: #475569; }
+    .back { margin-top: 16px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎯 Number Guessing Game</h1>
+    <p class="subtitle">I'm thinking of a number between 1 and 100. Can you guess it?</p>
+    <div class="range-badge" id="rangeDisplay">1 — 100</div>
+    <div class="guess-row">
+      <input type="number" id="guessInput" min="1" max="100" placeholder="Your guess" autofocus />
+      <button onclick="guess()">Guess</button>
+    </div>
+    <div class="message" id="message">Start guessing! 🎲</div>
+    <div class="stats">
+      <span>Attempts: <strong id="attempts">0</strong></span>
+      <button class="reset-btn" onclick="resetGame()">🔄 New Game</button>
+    </div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    let secret = Math.floor(Math.random() * 100) + 1;
+    let attempts = 0;
+    const msgEl = document.getElementById('message');
+    const attemptsEl = document.getElementById('attempts');
+    const guessInput = document.getElementById('guessInput');
+    function guess() {
+      const val = parseInt(guessInput.value);
+      if (isNaN(val) || val < 1 || val > 100) {
+        msgEl.innerHTML = '❌ Enter a number between 1 and 100';
+        msgEl.className = 'message low';
+        return;
+      }
+      attempts++;
+      attemptsEl.textContent = attempts;
+      if (val === secret) {
+        msgEl.innerHTML = `🎉 Correct! The number was ${secret}. You got it in ${attempts} attempt${attempts > 1 ? 's' : ''}!`;
+        msgEl.className = 'message correct';
+        guessInput.disabled = true;
+      } else if (val < secret) {
+        msgEl.innerHTML = `📈 Too low! <span class="hint">Try a higher number</span>`;
+        msgEl.className = 'message low';
+        guessInput.value = '';
+        guessInput.focus();
+      } else {
+        msgEl.innerHTML = `📉 Too high! <span class="hint">Try a lower number</span>`;
+        msgEl.className = 'message high';
+        guessInput.value = '';
+        guessInput.focus();
+      }
+    }
+    function resetGame() {
+      secret = Math.floor(Math.random() * 100) + 1;
+      attempts = 0;
+      attemptsEl.textContent = '0';
+      guessInput.disabled = false;
+      guessInput.value = '';
+      guessInput.focus();
+      msgEl.innerHTML = '🔄 New game started! Make your guess.';
+      msgEl.className = 'message';
+    }
+    guessInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') guess(); });
+  </script>
+</body>
+</html>
+

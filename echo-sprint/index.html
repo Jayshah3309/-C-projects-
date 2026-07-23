@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Echo Sprint</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <h1>Echo Sprint</h1>
+      <p class="subtitle">Collect the glowing orbs before the shadow catches you.</p>
+      <div class="game-card">
+        <canvas id="gameCanvas" width="720" height="480"></canvas>
+        <div class="hud">
+          <span id="statusText">Collect 5 orbs</span>
+          <span id="timerText">Time: 35</span>
+        </div>
+      </div>
+      <div class="controls">
+        <p>Move with WASD or arrow keys.</p>
+        <p>Press Space to plant an echo trail that blocks the shadow for a moment.</p>
+        <p>Press Enter to restart after a win or loss.</p>
+      </div>
+    </main>
+    <script src="game.js"></script>
+  </body>
+</html>
+

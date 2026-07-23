@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doubly Linked List</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(620px, 94vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
+    .controls input { padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .9rem; outline: none; width: 80px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 8px 12px; border: none; border-radius: 6px; color: #fff; font-size: .78rem; cursor: pointer; transition: background .2s; }
+    .add-btn { background: #2563eb; } .add-btn:hover { background: #1d4ed8; }
+    .rem-btn { background: #dc2626; } .rem-btn:hover { background: #b91c1c; }
+    .clear-btn { background: #475569; } .clear-btn:hover { background: #64748b; }
+    .list-display { display: flex; gap: 2px; align-items: center; min-height: 60px; overflow-x: auto; background: #0f172a; border-radius: 8px; padding: 12px; margin-bottom: 8px; flex-wrap: wrap; justify-content: center; }
+    .node { background: #1e3a5f; color: #60a5fa; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-family: monospace; font-size: .9rem; white-space: nowrap; }
+    .node.head { border: 2px solid #4ade80; }
+    .node.tail { border: 2px solid #fb923c; }
+    .arrow { color: #475569; font-size: .85rem; }
+    .info { color: #94a3b8; font-size: .85rem; }
+    .back { margin-top: 14px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔗🔗 Doubly Linked List</h1>
+    <p class="subtitle">Forward: head→tail | Backward: tail→head</p>
+    <div class="controls">
+      <input type="number" id="dllInput" value="42" placeholder="Val" />
+      <button class="add-btn" onclick="addFirst()">Add First</button>
+      <button class="add-btn" onclick="addLast()" style="background:#059669">Add Last</button>
+      <button class="rem-btn" onclick="removeFirst()">Rem First</button>
+      <button class="rem-btn" onclick="removeLast()" style="background:#b91c1c">Rem Last</button>
+      <button class="clear-btn" onclick="clearList()">Clear</button>
+    </div>
+    <div style="font-size:.85rem;color:#94a3b8;margin-bottom:4px">Forward:</div>
+    <div class="list-display" id="forwardDisplay"></div>
+    <div style="font-size:.85rem;color:#94a3b8;margin-bottom:4px;margin-top:8px">Backward:</div>
+    <div class="list-display" id="backwardDisplay"></div>
+    <div class="info" id="dllInfo">Size: 0</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    let dll = [];
+    function render() {
+      const fwd = document.getElementById('forwardDisplay');
+      const bwd = document.getElementById('backwardDisplay');
+      const info = document.getElementById('dllInfo');
+      if (dll.length === 0) {
+        fwd.innerHTML = '<div style="color:#475569;">NULL (empty)</div>';
+        bwd.innerHTML = '<div style="color:#475569;">NULL (empty)</div>';
+        info.textContent = 'Size: 0 | Empty'; return;
+      }
+      fwd.innerHTML = '<span style="color:#475569">NULL⇄</span>' + dll.map((val, i) =>
+        `<div class="node${i === 0 ? ' head' : ''}${i === dll.length - 1 ? ' tail' : ''}">${val}</div>` + (i < dll.length - 1 ? '<span class="arrow">⇄</span>' : '')
+      ).join('') + '<span class="arrow">⇄NULL</span>';
+      bwd.innerHTML = '<span style="color:#475569">NULL⇄</span>' + [...dll].reverse().map((val, i) =>
+        `<div class="node${i === dll.length - 1 ? ' head' : ''}${i === 0 ? ' tail' : ''}">${val}</div>` + (i < dll.length - 1 ? '<span class="arrow">⇄</span>' : '')
+      ).join('') + '<span class="arrow">⇄NULL</span>';
+      info.textContent = `Size: ${dll.length} | Head: ${dll[0]} | Tail: ${dll[dll.length - 1]}`;
+    }
+    function addFirst() { const v = document.getElementById('dllInput').value; if (!v) return; dll.unshift(isNaN(Number(v)) ? v : Number(v)); render(); }
+    function addLast() { const v = document.getElementById('dllInput').value; if (!v) return; dll.push(isNaN(Number(v)) ? v : Number(v)); render(); }
+    function removeFirst() { if (dll.length === 0) return; dll.shift(); render(); }
+    function removeLast() { if (dll.length === 0) return; dll.pop(); render(); }
+    function clearList() { dll.length = 0; render(); }
+    render();
+  </script>
+</body>
+</html>
+

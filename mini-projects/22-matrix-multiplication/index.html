@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matrix Multiplication</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(800px, 95vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 20px; font-size: 1.8rem; }
+    .row-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px; }
+    .group { text-align: left; min-width: 80px; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: 0.85rem; }
+    input { width: 100%; padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; text-align: center; outline: none; }
+    input:focus { border-color: #60a5fa; }
+    .matrices { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+    .matrix-box { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; }
+    .matrix-box h3 { font-size: 0.9rem; color: #94a3b8; margin-bottom: 8px; }
+    .matrix-box td { padding: 3px; }
+    .matrix-box input { width: 50px; padding: 4px; text-align: center; font-size: 0.85rem; }
+    .result-box { margin-top: 18px; overflow-x: auto; }
+    .result-box table { margin: 0 auto; border-collapse: collapse; }
+    .result-box td { padding: 6px 14px; border: 1px solid #334155; color: #4ade80; font-weight: 600; text-align: center; min-width: 44px; }
+    .note { color: #f87171; font-size: 0.85rem; margin: 8px 0; display: none; }
+    button { padding: 10px 28px; background: #2563eb; border: none; border-radius: 8px; color: #fff; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+    button:hover { background: #1d4ed8; }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>✖️ Matrix Multiplication</h1>
+    <div class="note" id="note">⚠️ Inner dimensions must match (A_cols = B_rows)</div>
+    <div class="row-group">
+      <div class="group"><label>A Rows</label><input type="number" id="ar" value="2" min="1" max="5" /></div>
+      <div class="group"><label>A Cols</label><input type="number" id="ac" value="3" min="1" max="5" /></div>
+      <div class="group"><label>B Rows</label><input type="number" id="br" value="3" min="1" max="5" /></div>
+      <div class="group"><label>B Cols</label><input type="number" id="bc" value="2" min="1" max="5" /></div>
+      <button onclick="build()">Set</button>
+    </div>
+    <div class="matrices" id="matrices"></div>
+    <div class="result-box" id="result"></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function build() {
+      const ar = Math.min(5, Math.max(1, parseInt(document.getElementById('ar').value) || 2));
+      const ac = Math.min(5, Math.max(1, parseInt(document.getElementById('ac').value) || 3));
+      const br = Math.min(5, Math.max(1, parseInt(document.getElementById('br').value) || 3));
+      const bc = Math.min(5, Math.max(1, parseInt(document.getElementById('bc').value) || 2));
+      document.getElementById('ar').value = ar; document.getElementById('ac').value = ac;
+      document.getElementById('br').value = br; document.getElementById('bc').value = bc;
+      const note = document.getElementById('note');
+      note.style.display = ac === br ? 'none' : 'block';
+      const m = document.getElementById('matrices');
+      m.innerHTML = [
+        { label: 'A', r: ar, c: ac, fill: (r,c) => r * ac + c + 1 },
+        { label: 'B', r: br, c: bc, fill: (r,c) => r * bc + c + 1 }
+      ].map(({label, r, c, fill}) => {
+        let html = `<div class="matrix-box"><h3>${label} (${r}×${c})</h3><table>`;
+        for (let row = 0; row < r; row++) {
+          html += '<tr>';
+          for (let col = 0; col < c; col++) html += `<td><input type="number" id="${label}${row}${col}" value="${fill(row,col)}" /></td>`;
+          html += '</tr>';
+        }
+        return html + '</table></div>';
+      }).join('');
+      compute();
+    }
+    function compute() {
+      const ar = parseInt(document.getElementById('ar').value);
+      const ac = parseInt(document.getElementById('ac').value);
+      const br = parseInt(document.getElementById('br').value);
+      const bc = parseInt(document.getElementById('bc').value);
+      const el = document.getElementById('result');
+      if (ac !== br) { el.innerHTML = '<span style="color:#f87171">❌ Inner dimensions must match (A_cols = B_rows)</span>'; return; }
+      const A = Array.from({length: ar}, (_, r) => Array.from({length: ac}, (_, c) => parseFloat(document.getElementById(`A${r}${c}`).value) || 0));
+      const B = Array.from({length: br}, (_, r) => Array.from({length: bc}, (_, c) => parseFloat(document.getElementById(`B${r}${c}`).value) || 0));
+      const result = Array.from({length: ar}, (_, r) => Array.from({length: bc}, (_, c) => {
+        let sum = 0;
+        for (let k = 0; k < ac; k++) sum += A[r][k] * B[k][c];
+        return sum;
+      }));
+      let html = `<h3 style="color:#94a3b8;margin:10px 0">A × B =</h3><table>`;
+      for (let r = 0; r < result.length; r++) {
+        html += '<tr>' + result[r].map(v => `<td>${v.toFixed(1)}</td>`).join('') + '</tr>';
+      }
+      el.innerHTML = html + '</table>';
+    }
+    window.addEventListener('input', (e) => { if (e.target.tagName === 'INPUT' && e.target.id) compute(); });
+    build();
+  </script>
+</body>
+</html>
+

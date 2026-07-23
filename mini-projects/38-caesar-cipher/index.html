@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caesar Cipher</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(500px, 90vw); text-align: center; }
+    h1 { margin-bottom: 16px; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: .9rem; }
+    input, textarea { width: 100%; padding: 10px 14px; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: #e2e8f0; font-size: 1rem; outline: none; }
+    input:focus, textarea:focus { border-color: #60a5fa; }
+    textarea { resize: vertical; min-height: 60px; font-family: monospace; }
+    .row { display: flex; gap: 10px; }
+    .row .group { flex: 1; }
+    button { width: 100%; padding: 12px; background: #2563eb; border: none; border-radius: 8px; color: #fff; font-size: 1rem; cursor: pointer; transition: background .2s; margin-top: 4px; }
+    button:hover { background: #1d4ed8; }
+    .result { margin-top: 18px; padding: 14px; background: #0f172a; border-radius: 8px; font-size: 1.1rem; min-height: 3em; word-break: break-all; }
+    .out-text { color: #60a5fa; font-weight: 600; }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔐 Caesar Cipher</h1>
+    <p style="color:#94a3b8;margin-bottom:12px;font-size:.9rem">Shift letters by a fixed number of positions</p>
+    <div class="group"><label>Message</label><textarea id="message" rows="2">HELLO WORLD</textarea></div>
+    <div class="row">
+      <div class="group"><label>Shift</label><input type="number" id="shift" value="3" min="1" max="25" /></div>
+      <div class="group" style="display:flex;align-items:flex-end;gap:6px">
+        <button onclick="encrypt()" style="background:#2563eb">Encrypt</button>
+        <button onclick="decrypt()" style="background:#7c3aed">Decrypt</button>
+      </div>
+    </div>
+    <div class="result" id="result"><span class="out-text">KHOOR ZRUOG</span></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function caesar(text, shift, decode = false) {
+      if (decode) shift = -shift;
+      return text.split('').map(ch => {
+        if (ch >= 'A' && ch <= 'Z') return String.fromCharCode(((ch.charCodeAt(0) - 65 + shift + 26) % 26) + 65);
+        if (ch >= 'a' && ch <= 'z') return String.fromCharCode(((ch.charCodeAt(0) - 97 + shift + 26) % 26) + 97);
+        return ch;
+      }).join('');
+    }
+    function encrypt() {
+      const msg = document.getElementById('message').value;
+      const shift = parseInt(document.getElementById('shift').value) || 3;
+      document.getElementById('result').innerHTML = `<span class="out-text">${caesar(msg, shift)}</span>`;
+    }
+    function decrypt() {
+      const msg = document.getElementById('message').value;
+      const shift = parseInt(document.getElementById('shift').value) || 3;
+      document.getElementById('result').innerHTML = `<span class="out-text">${caesar(msg, shift, true)}</span>`;
+    }
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(380px, 90vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 16px; font-size: 1.8rem; }
+    .display {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 1.8rem;
+      text-align: right;
+      margin-bottom: 16px;
+      min-height: 56px;
+      overflow: hidden;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    button {
+      padding: 14px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #1e293b;
+      color: #e2e8f0;
+      transition: background 0.15s;
+    }
+    button:hover { background: #334155; }
+    .op { background: #1e3a5f; }
+    .op:hover { background: #2563eb; }
+    .eq { background: #2563eb; }
+    .eq:hover { background: #1d4ed8; }
+    .clear { background: #7f1d1d; }
+    .clear:hover { background: #991b1b; }
+    .span2 { grid-column: span 2; }
+    .back { margin-top: 20px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🧮 Calculator</h1>
+    <div class="display" id="display">0</div>
+    <div class="grid">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button onclick="press('(')">(</button>
+      <button onclick="press(')')">)</button>
+      <button class="op" onclick="press('/')">÷</button>
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button class="op" onclick="press('*')">×</button>
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button class="op" onclick="press('-')">−</button>
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button class="op" onclick="press('+')">+</button>
+      <button onclick="press('0')">0</button>
+      <button onclick="press('.')">.</button>
+      <button class="eq span2" onclick="calculate()">=</button>
+    </div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    const display = document.getElementById('display');
+    let expression = '';
+    function press(val) {
+      expression += val;
+      display.textContent = expression || '0';
+    }
+    function clearDisplay() {
+      expression = '';
+      display.textContent = '0';
+    }
+    function calculate() {
+      try {
+        const result = Function('"use strict"; return (' + expression + ')')();
+        display.textContent = result;
+        expression = String(result);
+      } catch { display.textContent = 'Error'; expression = ''; }
+    }
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hash Table</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(560px, 94vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
+    .controls input { padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .9rem; outline: none; width: 100px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 8px 14px; border: none; border-radius: 6px; color: #fff; font-size: .8rem; cursor: pointer; transition: background .2s; }
+    .put-btn { background: #2563eb; } .put-btn:hover { background: #1d4ed8; }
+    .get-btn { background: #7c3aed; } .get-btn:hover { background: #6d28d9; }
+    .del-btn { background: #dc2626; } .del-btn:hover { background: #b91c1c; }
+    .clr-btn { background: #475569; } .clr-btn:hover { background: #64748b; }
+    .ht-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 60px; margin-bottom: 8px; }
+    .ht-row { display: flex; gap: 6px; margin-bottom: 4px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .ht-bucket { display: flex; gap: 4px; align-items: center; }
+    .ht-idx { color: #475569; font-family: monospace; font-size: .8rem; min-width: 30px; }
+    .ht-item { background: #1e3a5f; color: #60a5fa; padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: .85rem; }
+    .ht-empty { color: #334155; font-size: .8rem; font-family: monospace; }
+    .info { color: #94a3b8; font-size: .85rem; }
+    .back { margin-top: 14px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🗄️ Hash Table</h1>
+    <p class="subtitle">Key-Value store with chaining (size: 8)</p>
+    <div class="controls">
+      <input type="text" id="htKey" value="name" placeholder="Key" style="width:80px" />
+      <input type="text" id="htVal" value="Alice" placeholder="Value" style="width:80px" />
+      <button class="put-btn" onclick="put()">Put</button>
+      <button class="get-btn" onclick="get()">Get</button>
+      <button class="del-btn" onclick="del()">Delete</button>
+      <button class="clr-btn" onclick="clearHT()">Clear</button>
+    </div>
+    <div class="ht-display" id="htDisplay"></div>
+    <div class="info" id="htInfo">Size: 0</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    const SIZE = 8;
+    let table = Array.from({length: SIZE}, () => []);
+
+    function hash(key) {
+      let h = 0;
+      for (const ch of String(key)) h = (h * 31 + ch.charCodeAt(0)) % SIZE;
+      return h;
+    }
+
+    function put() {
+      const key = document.getElementById('htKey').value;
+      const val = document.getElementById('htVal').value;
+      if (!key || !val) return;
+      const idx = hash(key);
+      const bucket = table[idx];
+      const existing = bucket.find(e => e.key === key);
+      if (existing) existing.val = val;
+      else bucket.push({key, val});
+      render();
+    }
+
+    function get() {
+      const key = document.getElementById('htKey').value;
+      if (!key) return;
+      const idx = hash(key);
+      const item = table[idx].find(e => e.key === key);
+      alert(item ? `Value: ${item.val}` : `Key "${key}" not found`);
+    }
+
+    function del() {
+      const key = document.getElementById('htKey').value;
+      if (!key) return;
+      const idx = hash(key);
+      table[idx] = table[idx].filter(e => e.key !== key);
+      render();
+    }
+
+    function clearHT() { table = Array.from({length: SIZE}, () => []); render(); }
+
+    function render() {
+      const display = document.getElementById('htDisplay');
+      const info = document.getElementById('htInfo');
+      let total = 0;
+      display.innerHTML = table.map((bucket, i) => {
+        total += bucket.length;
+        const items = bucket.length > 0
+          ? bucket.map(e => `<span class="ht-item">${e.key}:${e.val}</span>`).join('')
+          : '<span class="ht-empty">∅</span>';
+        return `<div class="ht-row"><span class="ht-idx">[${i}]</span><div class="ht-bucket">${items}</div></div>`;
+      }).join('');
+      info.textContent = `Total entries: ${total} | Load factor: ${(total / SIZE).toFixed(2)}`;
+    }
+    render();
+  </script>
+</body>
+</html>
+

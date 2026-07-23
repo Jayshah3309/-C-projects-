@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Character Frequency</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(540px, 90vw); text-align: center; }
+    h1 { margin-bottom: 16px; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: .9rem; }
+    input { width: 100%; padding: 12px 14px; border: 1px solid #334155; border-radius: 8px; background: #0f172a; color: #e2e8f0; font-size: 1.1rem; outline: none; }
+    input:focus { border-color: #60a5fa; }
+    button { width: 100%; padding: 12px; background: #2563eb; border: none; border-radius: 8px; color: #fff; font-size: 1rem; cursor: pointer; transition: background .2s; margin-top: 4px; }
+    button:hover { background: #1d4ed8; }
+    .freq-table { margin-top: 18px; padding: 14px; background: #0f172a; border-radius: 8px; max-height: 260px; overflow-y: auto; min-height: 3em; }
+    .freq-row { display: flex; justify-content: space-between; padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .freq-row .char { font-weight: 600; color: #60a5fa; min-width: 30px; }
+    .freq-row .bar-wrapper { flex: 1; margin: 0 10px; display: flex; align-items: center; }
+    .freq-row .bar { height: 12px; background: #2563eb; border-radius: 6px; transition: width .3s; }
+    .freq-row .count { color: #94a3b8; min-width: 40px; text-align: right; }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📊 Character Frequency</h1>
+    <div class="group"><label>Enter text</label><input type="text" id="inputStr" value="mississippi river" /></div>
+    <button onclick="analyze()">Analyze</button>
+    <div class="freq-table" id="freqTable"></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function analyze() {
+      const s = document.getElementById('inputStr').value;
+      const el = document.getElementById('freqTable');
+      if (!s) { el.innerHTML = '❌ Enter text'; return; }
+      const freq = {};
+      for (const ch of s) { if (ch !== ' ') freq[ch] = (freq[ch] || 0) + 1; }
+      const entries = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+      const maxCount = entries.length > 0 ? entries[0][1] : 1;
+      el.innerHTML = entries.map(([ch, count]) =>
+        `<div class="freq-row"><span class="char">${ch}</span><div class="bar-wrapper"><div class="bar" style="width:${(count/maxCount)*100}%"></div></div><span class="count">${count}</span></div>`
+      ).join('') || '<div style="color:#94a3b8">No characters found</div>';
+    }
+    analyze();
+  </script>
+</body>
+</html>
+

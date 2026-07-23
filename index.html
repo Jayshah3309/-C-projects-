@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini Projects Hub</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0b0e1a, #1a1f35, #0b0e1a);
+      color: #e8edf5;
+      display: flex;
+      justify-content: center;
+      padding: 30px 16px;
+    }
+    .container { width: min(1200px, 100%); }
+    header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    h1 {
+      font-size: 2.6rem;
+      background: linear-gradient(135deg, #84b6ff, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle { color: #9aa9c9; font-size: 1.05rem; margin-top: 6px; }
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: rgba(20, 25, 45, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 20px 18px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      border-color: rgba(132, 182, 255, 0.3);
+    }
+    .card .num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #6a7eb5;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+    .card .title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #d6e2ff;
+    }
+    .card .desc {
+      font-size: 0.88rem;
+      color: #8899c7;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+    .card.echo {
+      border-color: rgba(127, 255, 212, 0.25);
+      background: rgba(20, 40, 40, 0.85);
+    }
+    .card.echo .title { color: #7fffd4; }
+    .section-label {
+      grid-column: 1 / -1;
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 20px 0 4px;
+      color: #b0c4f0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧩 Mini Projects Hub</h1>
+      <p class="subtitle">A collection of 100 interactive mini-projects + 1 bonus game</p>
+    </header>
+    <div class="project-grid">
+
+      <div class="section-label">🎮 Bonus Game</div>
+
+      <a class="card echo" href="echo-sprint/index.html">
+        <div class="num">★</div>
+        <div class="title">Echo Sprint</div>
+        <div class="desc">Collect glowing orbs while evading the shadow. WASD + Space to plant echoes.</div>
+      </a>
+
+      <div class="section-label">📐 Mini Projects</div>
+
+      <a class="card" href="mini-projects/01-hello-world/index.html">
+        <div class="num">#01</div>
+        <div class="title">Hello World</div>
+        <div class="desc">A friendly interactive hello with your name.</div>
+      </a>
+
+      <a class="card" href="mini-projects/02-calculator/index.html">
+        <div class="num">#02</div>
+        <div class="title">Calculator</div>
+        <div class="desc">Basic arithmetic operations with a clean UI.</div>
+      </a>
+
+      <a class="card" href="mini-projects/03-temperature-converter/index.html">
+        <div class="num">#03</div>
+        <div class="title">Temperature Converter</div>
+        <div class="desc">Convert between Celsius, Fahrenheit &amp; Kelvin.</div>
+      </a>
+
+      <a class="card" href="mini-projects/04-currency-converter/index.html">
+        <div class="num">#04</div>
+        <div class="title">Currency Converter</div>
+        <div class="desc">Convert between major world currencies (static rates).</div>
+      </a>
+
+      <a class="card" href="mini-projects/05-area-calculator/index.html">
+        <div class="num">#05</div>
+        <div class="title">Area Calculator</div>
+        <div class="desc">Compute area of circle, triangle, rectangle &amp; more.</div>
+      </a>
+
+      <a class="card" href="mini-projects/06-bmi-calculator/index.html">
+        <div class="num">#06</div>
+        <div class="title">BMI Calculator</div>
+        <div class="desc">Calculate your Body Mass Index and category.</div>
+      </a>
+
+      <a class="card" href="mini-projects/07-even-odd-checker/index.html">
+        <div class="num">#07</div>
+        <div class="title">Even/Odd Checker</div>
+        <div class="desc">Check if a number is even or odd instantly.</div>
+      </a>
+
+      <a class="card" href="mini-projects/08-prime-checker/index.html">
+        <div class="num">#08</div>
+        <div class="title">Prime Number Checker</div>
+        <div class="desc">Determine if a number is prime with explanation.</div>
+      </a>
+
+      <a class="card" href="mini-projects/09-leap-year-checker/index.html">
+        <div class="num">#09</div>
+        <div class="title">Leap Year Checker</div>
+        <div class="desc">Check if a given year is a leap year.</div>
+      </a>
+
+      <a class="card" href="mini-projects/10-armstrong-number/index.html">
+        <div class="num">#10</div>
+        <div class="title">Armstrong Number</div>
+        <div class="desc">Check if a number is an Armstrong number.</div>
+      </a>
+
+      <a class="card" href="mini-projects/11-fibonacci-series/index.html">
+        <div class="num">#11</div>
+        <div class="title">Fibonacci Series</div>
+        <div class="desc">Generate Fibonacci sequence up to N terms.</div>
+      </a>
+
+      <a class="card" href="mini-projects/12-factorial-calculator/index.html">
+        <div class="num">#12</div>
+        <div class="title">Factorial Calculator</div>
+        <div class="desc">Compute factorial of a non-negative integer.</div>
+      </a>
+
+      <a class="card" href="mini-projects/13-multiplication-table/index.html">
+        <div class="num">#13</div>
+        <div class="title">Multiplication Table</div>
+        <div class="desc">Display multiplication table for any number.</div>
+      </a>
+
+      <a class="card" href="mini-projects/14-gcd-lcm-calculator/index.html">
+        <div class="num">#14</div>
+        <div class="title">GCD &amp; LCM Calculator</div>
+        <div class="desc">Find Greatest Common Divisor and Least Common Multiple.</div>
+      </a>
+
+      <a class="card" href="mini-projects/15-number-reversal/index.html">
+        <div class="num">#15</div>
+        <div class="title">Number Reversal</div>
+        <div class="desc">Reverse the digits of any integer.</div>
+      </a>
+
+      <a class="card" href="mini-projects/16-palindrome-checker/index.html">
+        <div class="num">#16</div>
+        <div class="title">Palindrome Checker</div>
+        <div class="desc">Check if a word or number reads the same backwards.</div>
+      </a>
+
+      <a class="card" href="mini-projects/17-pattern-printing/index.html">
+        <div class="num">#17</div>
+        <div class="title">Pattern Printing</div>
+        <div class="desc">Generate various star &amp; number patterns.</div>
+      </a>
+
+      <a class="card" href="mini-projects/18-simple-interest/index.html">
+        <div class="num">#18</div>
+        <div class="title">Simple Interest Calculator</div>
+        <div class="desc">Compute simple interest (P × R × T / 100).</div>
+      </a>
+
+      <a class="card" href="mini-projects/19-compound-interest/index.html">
+        <div class="num">#19</div>
+        <div class="title">Compound Interest Calculator</div>
+        <div class="desc">Calculate compound interest with frequency.</div>
+      </a>
+
+      <a class="card" href="mini-projects/20-number-guessing-game/index.html">
+        <div class="num">#20</div>
+        <div class="title">Number Guessing Game</div>
+        <div class="desc">Guess the secret number between 1 and 100.</div>
+      </a>
+
+      <div class="section-label">🧮 Matrix &amp; Array</div>
+
+      <a class="card" href="mini-projects/21-matrix-addition/index.html">
+        <div class="num">#21</div>
+        <div class="title">Matrix Addition</div>
+        <div class="desc">Add two matrices of the same dimensions.</div>
+      </a>
+
+      <a class="card" href="mini-projects/22-matrix-multiplication/index.html">
+        <div class="num">#22</div>
+        <div class="title">Matrix Multiplication</div>
+        <div class="desc">Multiply two compatible matrices.</div>
+      </a>
+
+      <a class="card" href="mini-projects/23-matrix-transpose/index.html">
+        <div class="num">#23</div>
+        <div class="title">Matrix Transpose</div>
+        <div class="desc">Flip a matrix over its diagonal.</div>
+      </a>
+
+      <a class="card" href="mini-projects/24-matrix-determinant/index.html">
+        <div class="num">#24</div>
+        <div class="title">Matrix Determinant</div>
+        <div class="desc">Compute determinant of 2x2 and 3x3 matrices.</div>
+      </a>
+
+      <a class="card" href="mini-projects/25-array-statistics/index.html">
+        <div class="num">#25</div>
+        <div class="title">Array Statistics</div>
+        <div class="desc">Mean, median, mode, min, max, range &amp; more.</div>
+      </a>
+
+      <div class="section-label">🔍 Search &amp; Sort</div>
+
+      <a class="card" href="mini-projects/26-linear-search/index.html">
+        <div class="num">#26</div>
+        <div class="title">Linear Search</div>
+        <div class="desc">Sequentially search for an element in an array.</div>
+      </a>
+
+      <a class="card" href="mini-projects/27-binary-search/index.html">
+        <div class="num">#27</div>
+        <div class="title">Binary Search</div>
+        <div class="desc">Efficient search on a sorted array (O(log n)).</div>
+      </a>
+
+      <a class="card" href="mini-projects/28-bubble-sort/index.html">
+        <div class="num">#28</div>
+        <div class="title">Bubble Sort</div>
+        <div class="desc">Simple sorting with adjacent swaps.</div>
+      </a>
+
+      <a class="card" href="mini-projects/29-selection-sort/index.html">
+        <div class="num">#29</div>
+        <div class="title">Selection Sort</div>
+        <div class="desc">Select minimum and place at correct position.</div>
+      </a>
+
+      <a class="card" href="mini-projects/30-insertion-sort/index.html">
+        <div class="num">#30</div>
+        <div class="title">Insertion Sort</div>
+        <div class="desc">Build sorted array one element at a time.</div>
+      </a>
+
+      <a class="card" href="mini-projects/31-merge-sort/index.html">
+        <div class="num">#31</div>
+        <div class="title">Merge Sort</div>
+        <div class="desc">Divide &amp; conquer O(n log n) sorting.</div>
+      </a>
+
+      <a class="card" href="mini-projects/32-quick-sort/index.html">
+        <div class="num">#32</div>
+        <div class="title">Quick Sort</div>
+        <div class="desc">Pivot-based divide &amp; conquer sorting.</div>
+      </a>
+
+      <div class="section-label">📝 String &amp; Text</div>
+
+      <a class="card" href="mini-projects/33-string-reverse/index.html">
+        <div class="num">#33</div>
+        <div class="title">String Reverse</div>
+        <div class="desc">Reverse any string instantly.</div>
+      </a>
+
+      <a class="card" href="mini-projects/34-string-palindrome/index.html">
+        <div class="num">#34</div>
+        <div class="title">String Palindrome</div>
+        <div class="desc">Check if a string is a palindrome.</div>
+      </a>
+
+      <a class="card" href="mini-projects/35-string-compression/index.html">
+        <div class="num">#35</div>
+        <div class="title">String Compression</div>
+        <div class="desc">Run-length encoding compression.</div>
+      </a>
+
+      <a class="card" href="mini-projects/36-word-counter/index.html">
+        <div class="num">#36</div>
+        <div class="title">Word Counter</div>
+        <div class="desc">Count words, characters &amp; sentences in text.</div>
+      </a>
+
+      <a class="card" href="mini-projects/37-character-frequency/index.html">
+        <div class="num">#37</div>
+        <div class="title">Character Frequency</div>
+        <div class="desc">Visual character frequency analysis.</div>
+      </a>
+
+      <a class="card" href="mini-projects/38-caesar-cipher/index.html">
+        <div class="num">#38</div>
+        <div class="title">Caesar Cipher</div>
+        <div class="desc">Shift letter cipher with encrypt/decrypt.</div>
+      </a>
+
+      <a class="card" href="mini-projects/39-text-encryption/index.html">
+        <div class="num">#39</div>
+        <div class="title">Text Encryption</div>
+        <div class="desc">Base64 encode/decode for text.</div>
+      </a>
+
+      <a class="card" href="mini-projects/40-csv-file-reader/index.html">
+        <div class="num">#40</div>
+        <div class="title">CSV File Reader</div>
+        <div class="desc">Parse and display CSV data as a table.</div>
+      </a>
+
+      <div class="section-label">📦 Data Structures</div>
+
+      <a class="card" href="mini-projects/41-stack/index.html">
+        <div class="num">#41</div>
+        <div class="title">Stack</div>
+        <div class="desc">LIFO data structure with push/pop/peek.</div>
+      </a>
+
+      <a class="card" href="mini-projects/42-queue/index.html">
+        <div class="num">#42</div>
+        <div class="title">Queue</div>
+        <div class="desc">FIFO data structure with enqueue/dequeue.</div>
+      </a>
+
+      <a class="card" href="mini-projects/43-circular-queue/index.html">
+        <div class="num">#43</div>
+        <div class="title">Circular Queue</div>
+        <div class="desc">Fixed-size queue that wraps around.</div>
+      </a>
+
+      <a class="card" href="mini-projects/44-linked-list/index.html">
+        <div class="num">#44</div>
+        <div class="title">Linked List</div>
+        <div class="desc">Singly linked list with insert/delete/search.</div>
+      </a>
+
+      <a class="card" href="mini-projects/45-doubly-linked-list/index.html">
+        <div class="num">#45</div>
+        <div class="title">Doubly Linked List</div>
+        <div class="desc">List with forward &amp; backward traversal.</div>
+      </a>
+
+      <a class="card" href="mini-projects/46-circular-linked-list/index.html">
+        <div class="num">#46</div>
+        <div class="title">Circular Linked List</div>
+        <div class="desc">Last node points back to head.</div>
+      </a>
+
+      <a class="card" href="mini-projects/47-binary-search-tree/index.html">
+        <div class="num">#47</div>
+        <div class="title">Binary Search Tree</div>
+        <div class="desc">BST with insert/delete/search &amp; 3 traversals.</div>
+      </a>
+
+      <a class="card" href="mini-projects/48-avl-tree/index.html">
+        <div class="num">#48</div>
+        <div class="title">AVL Tree</div>
+        <div class="desc">Self-balancing BST with rotations.</div>
+      </a>
+
+      <a class="card" href="mini-projects/49-heap/index.html">
+        <div class="num">#49</div>
+        <div class="title">Heap (Max-Heap)</div>
+        <div class="desc">Complete binary tree with heapify operations.</div>
+      </a>
+
+      <a class="card" href="mini-projects/50-priority-queue/index.html">
+        <div class="num">#50</div>
+        <div class="title">Priority Queue</div>
+        <div class="desc">Elements ordered by priority.</div>
+      </a>
+
+      <a class="card" href="mini-projects/51-hash-table/index.html">
+        <div class="num">#51</div>
+        <div class="title">Hash Table</div>
+        <div class="desc">Key-value store with chaining.</div>
+      </a>
+
+      <a class="card" href="mini-projects/52-graph/index.html">
+        <div class="num">#52</div>
+        <div class="title">Graph</div>
+        <div class="desc">Undirected graph with adjacency list.</div>
+      </a>
+
+      <div class="section-label">🧠 Algorithms</div>
+
+      <a class="card" href="mini-projects/53-dfs/index.html">
+        <div class="num">#53</div>
+        <div class="title">DFS</div>
+        <div class="desc">Depth-First Search graph traversal.</div>
+      </a>
+
+      <a class="card" href="mini-projects/54-bfs/index.html">
+        <div class="num">#54</div>
+        <div class="title">BFS</div>
+        <div class="desc">Breadth-First Search graph traversal.</div>
+      </a>
+
+      <a class="card" href="mini-projects/55-dijkstra/index.html">
+        <div class="num">#55</div>
+        <div class="title">Dijkstra's Algorithm</div>
+        <div class="desc">Shortest path in weighted graphs.</div>
+      </a>
+
+      <a class="card" href="mini-projects/56-kruskal/index.html">
+        <div class="num">#56</div>
+        <div class="title">Kruskal's Algorithm</div>
+        <div class="desc">MST using Union-Find.</div>
+      </a>
+
+      <a class="card" href="mini-projects/57-prim/index.html">
+        <div class="num">#57</div>
+        <div class="title">Prim's Algorithm</div>
+        <div class="desc">MST building from a root node.</div>
+      </a>
+
+      <a class="card" href="mini-projects/58-huffman-coding/index.html">
+        <div class="num">#58</div>
+        <div class="title">Huffman Coding</div>
+        <div class="desc">Optimal prefix-free binary codes.</div>
+      </a>
+
+      <a class="card" href="mini-projects/59-expression-evaluator/index.html">
+        <div class="num">#59</div>
+        <div class="title">Expression Evaluator</div>
+        <div class="desc">Evaluate mathematical expressions.</div>
+      </a>
+
+      <a class="card" href="mini-projects/60-polynomial-calculator/index.html">
+        <div class="num">#60</div>
+        <div class="title">Polynomial Calculator</div>
+        <div class="desc">Evaluate P(x) for any polynomial.</div>
+      </a>
+
+      <div class="section-label">🛠️ Systems &amp; Applications</div>
+
+      <a class="card" href="mini-projects/61-mini-shell/index.html">
+        <div class="num">#61</div>
+        <div class="title">Mini Shell</div>
+        <div class="desc">Terminal emulator with filesystem navigation.</div>
+      </a>
+
+      <a class="card" href="mini-projects/62-file-manager/index.html">
+        <div class="num">#62</div>
+        <div class="title">File Manager</div>
+        <div class="desc">Create, delete, rename files &amp; folders.</div>
+      </a>
+
+      <a class="card" href="mini-projects/63-text-editor/index.html">
+        <div class="num">#63</div>
+        <div class="title">Text Editor</div>
+        <div class="desc">Write, save, and style documents.</div>
+      </a>
+
+      <a class="card" href="mini-projects/64-process-monitor/index.html">
+        <div class="num">#64</div>
+        <div class="title">Process Monitor</div>
+        <div class="desc">Simulated process list with PID &amp; status.</div>
+      </a>
+
+      <a class="card" href="mini-projects/65-memory-allocator/index.html">
+        <div class="num">#65</div>
+        <div class="title">Memory Allocator</div>
+        <div class="desc">First-fit memory allocation simulator.</div>
+      </a>
+
+      <a class="card" href="mini-projects/66-student-database/index.html">
+        <div class="num">#66</div>
+        <div class="title">Student Database</div>
+        <div class="desc">CRUD operations on student records.</div>
+      </a>
+
+      <a class="card" href="mini-projects/67-library-management/index.html">
+        <div class="num">#67</div>
+        <div class="title">Library Management</div>
+        <div class="desc">Track books, members &amp; borrowing.</div>
+      </a>
+
+      <a class="card" href="mini-projects/68-banking-system/index.html">
+        <div class="num">#68</div>
+        <div class="title">Banking System</div>
+        <div class="desc">Deposit, withdraw &amp; transfer funds.</div>
+      </a>
+
+      <a class="card" href="mini-projects/69-employee-management/index.html">
+        <div class="num">#69</div>
+        <div class="title">Employee Management</div>
+        <div class="desc">Manage employee records &amp; departments.</div>
+      </a>
+
+      <a class="card" href="mini-projects/70-inventory-management/index.html">
+        <div class="num">#70</div>
+        <div class="title">Inventory Management</div>
+        <div class="desc">Track stock levels and product info.</div>
+      </a>
+
+      <a class="card" href="mini-projects/71-contact-manager/index.html">
+        <div class="num">#71</div>
+        <div class="title">Contact Manager</div>
+        <div class="desc">Store and search contacts with export.</div>
+      </a>
+
+      <a class="card" href="mini-projects/72-file-compression/index.html">
+        <div class="num">#72</div>
+        <div class="title">File Compression</div>
+        <div class="desc">RLE compression &amp; Base64 encoding.</div>
+      </a>
+
+      <a class="card" href="mini-projects/73-log-analyzer/index.html">
+        <div class="num">#73</div>
+        <div class="title">Log Analyzer</div>
+        <div class="desc">Parse and visualize log entries.</div>
+      </a>
+
+      <a class="card" href="mini-projects/74-configuration-parser/index.html">
+        <div class="num">#74</div>
+        <div class="title">Configuration Parser</div>
+        <div class="desc">Parse INI-style config files.</div>
+      </a>
+
+      <a class="card" href="mini-projects/75-command-interpreter/index.html">
+        <div class="num">#75</div>
+        <div class="title">Command Interpreter</div>
+        <div class="desc">Interactive REPL with variables &amp; math.</div>
+      </a>
+
+      <a class="card" href="mini-projects/76-tcp-chat-server/index.html">
+        <div class="num">#76</div>
+        <div class="title">TCP Chat Server</div>
+        <div class="desc">Local simulated chat server.</div>
+      </a>
+
+      <a class="card" href="mini-projects/77-tcp-chat-client/index.html">
+        <div class="num">#77</div>
+        <div class="title">TCP Chat Client</div>
+        <div class="desc">Connect to chat with username.</div>
+      </a>
+
+      <a class="card" href="mini-projects/78-http-client/index.html">
+        <div class="num">#78</div>
+        <div class="title">HTTP Client</div>
+        <div class="desc">Make requests and view responses.</div>
+      </a>
+
+      <a class="card" href="mini-projects/79-http-server/index.html">
+        <div class="num">#79</div>
+        <div class="title">HTTP Server</div>
+        <div class="desc">Serve static content on local port.</div>
+      </a>
+
+      <a class="card" href="mini-projects/80-multi-threaded-calculator/index.html">
+        <div class="num">#80</div>
+        <div class="title">Multi-threaded Calculator</div>
+        <div class="desc">Parallel calculation with worker simulation.</div>
+      </a>
+
+      <div class="section-label">🔬 Compilers &amp; Systems</div>
+
+      <a class="card" href="mini-projects/81-mini-compiler/index.html">
+        <div class="num">#81</div>
+        <div class="title">Mini Compiler</div>
+        <div class="desc">Tokenize, parse &amp; generate simple code.</div>
+      </a>
+
+      <a class="card" href="mini-projects/82-simple-interpreter/index.html">
+        <div class="num">#82</div>
+        <div class="title">Simple Interpreter</div>
+        <div class="desc">Execute basic arithmetic expressions.</div>
+      </a>
+
+      <a class="card" href="mini-projects/83-virtual-machine/index.html">
+        <div class="num">#83</div>
+        <div class="title">Virtual Machine</div>
+        <div class="desc">Bytecode interpreter with instruction set.</div>
+      </a>
+
+      <a class="card" href="mini-projects/84-database-engine/index.html">
+        <div class="num">#84</div>
+        <div class="title">Database Engine</div>
+        <div class="desc">In-memory DB with SQL-like queries.</div>
+      </a>
+
+      <a class="card" href="mini-projects/85-file-system-simulator/index.html">
+        <div class="num">#85</div>
+        <div class="title">File System Simulator</div>
+        <div class="desc">Virtual filesystem with directories &amp; files.</div>
+      </a>
+
+      <a class="card" href="mini-projects/86-cpu-scheduler/index.html">
+        <div class="num">#86</div>
+        <div class="title">CPU Scheduler</div>
+        <div class="desc">FCFS, SJF, Round Robin scheduling.</div>
+      </a>
+
+      <a class="card" href="mini-projects/87-process-scheduler/index.html">
+        <div class="num">#87</div>
+        <div class="title">Process Scheduler</div>
+        <div class="desc">Multi-level queue scheduling simulation.</div>
+      </a>
+
+      <a class="card" href="mini-projects/88-memory-management-simulator/index.html">
+        <div class="num">#88</div>
+        <div class="title">Memory Management Simulator</div>
+        <div class="desc">Paging &amp; page replacement algorithms.</div>
+      </a>
+
+      <a class="card" href="mini-projects/89-disk-scheduling-simulator/index.html">
+        <div class="num">#89</div>
+        <div class="title">Disk Scheduling Simulator</div>
+        <div class="desc">FCFS, SCAN, C-SCAN, SSTF algorithms.</div>
+      </a>
+
+      <a class="card" href="mini-projects/90-cache-simulator/index.html">
+        <div class="num">#90</div>
+        <div class="title">Cache Simulator</div>
+        <div class="desc">LRU, FIFO, LFU cache replacement.</div>
+      </a>
+
+      <a class="card" href="mini-projects/91-operating-system-simulator/index.html">
+        <div class="num">#91</div>
+        <div class="title">Operating System Simulator</div>
+        <div class="desc">Integrated OS component simulation.</div>
+      </a>
+
+      <a class="card" href="mini-projects/92-packet-analyzer/index.html">
+        <div class="num">#92</div>
+        <div class="title">Packet Analyzer</div>
+        <div class="desc">Inspect and decode network packets.</div>
+      </a>
+
+      <a class="card" href="mini-projects/93-mini-debugger/index.html">
+        <div class="num">#93</div>
+        <div class="title">Mini Debugger</div>
+        <div class="desc">Step-through code with breakpoints.</div>
+      </a>
+
+      <a class="card" href="mini-projects/94-static-code-analyzer/index.html">
+        <div class="num">#94</div>
+        <div class="title">Static Code Analyzer</div>
+        <div class="desc">Lint and analyze code patterns.</div>
+      </a>
+
+      <a class="card" href="mini-projects/95-embedded-cli-framework/index.html">
+        <div class="num">#95</div>
+        <div class="title">Embedded CLI Framework</div>
+        <div class="desc">Modular CLI for embedded systems.</div>
+      </a>
+
+      <a class="card" href="mini-projects/96-rtos-task-simulator/index.html">
+        <div class="num">#96</div>
+        <div class="title">RTOS Task Simulator</div>
+        <div class="desc">Real-time task scheduling &amp; priorities.</div>
+      </a>
+
+      <a class="card" href="mini-projects/97-uart-terminal/index.html">
+        <div class="num">#97</div>
+        <div class="title">UART Terminal</div>
+        <div class="desc">Simulated serial communication.</div>
+      </a>
+
+      <a class="card" href="mini-projects/98-bootloader-simulator/index.html">
+        <div class="num">#98</div>
+        <div class="title">Bootloader Simulator</div>
+        <div class="desc">Boot sequence with stage loading.</div>
+      </a>
+
+      <a class="card" href="mini-projects/99-embedded-logging-library/index.html">
+        <div class="num">#99</div>
+        <div class="title">Embedded Logging Library</div>
+        <div class="desc">Level-based logging with filtering.</div>
+      </a>
+
+      <a class="card" href="mini-projects/100-c-utility-toolkit/index.html">
+        <div class="num">#100</div>
+        <div class="title">C Utility Toolkit</div>
+        <div class="desc">String, memory &amp; math utility functions.</div>
+      </a>
+
+    </div>
+  </div>
+</body>
+</html>
+

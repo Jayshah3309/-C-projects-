@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Area Calculator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(440px, 90vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 20px; font-size: 1.8rem; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: 0.9rem; }
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 1rem;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: #60a5fa; }
+    .inputs { margin-top: 14px; }
+    .inputs .group { display: none; }
+    .inputs .group.active { display: block; }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1d4ed8; }
+    .result {
+      margin-top: 18px;
+      padding: 14px;
+      background: #0f172a;
+      border-radius: 8px;
+      font-size: 1.3rem;
+      min-height: 3em;
+    }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📐 Area Calculator</h1>
+    <div class="group">
+      <label>Shape</label>
+      <select id="shape" onchange="toggleInputs()">
+        <option value="circle">Circle</option>
+        <option value="rectangle">Rectangle</option>
+        <option value="triangle">Triangle</option>
+        <option value="square">Square</option>
+      </select>
+    </div>
+    <div class="inputs" id="inputs">
+      <div class="group active" id="circle-inputs">
+        <label>Radius</label>
+        <input type="number" id="radius" value="5" />
+      </div>
+      <div class="group" id="rectangle-inputs">
+        <label>Length</label><input type="number" id="length" value="10" />
+        <label style="margin-top:10px">Width</label><input type="number" id="width" value="5" />
+      </div>
+      <div class="group" id="triangle-inputs">
+        <label>Base</label><input type="number" id="base" value="8" />
+        <label style="margin-top:10px">Height</label><input type="number" id="height" value="5" />
+      </div>
+      <div class="group" id="square-inputs">
+        <label>Side</label>
+        <input type="number" id="side" value="6" />
+      </div>
+    </div>
+    <button onclick="calculate()">Calculate Area</button>
+    <div class="result" id="result">--</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function toggleInputs() {
+      const shape = document.getElementById('shape').value;
+      document.querySelectorAll('.inputs .group').forEach(g => g.classList.remove('active'));
+      document.getElementById(shape + '-inputs').classList.add('active');
+    }
+    function calculate() {
+      const shape = document.getElementById('shape').value;
+      let area;
+      if (shape === 'circle') {
+        const r = parseFloat(document.getElementById('radius').value);
+        if (isNaN(r) || r < 0) { document.getElementById('result').textContent = '❌ Invalid radius'; return; }
+        area = Math.PI * r * r;
+      } else if (shape === 'rectangle') {
+        const l = parseFloat(document.getElementById('length').value);
+        const w = parseFloat(document.getElementById('width').value);
+        if (isNaN(l) || l < 0 || isNaN(w) || w < 0) { document.getElementById('result').textContent = '❌ Invalid values'; return; }
+        area = l * w;
+      } else if (shape === 'triangle') {
+        const b = parseFloat(document.getElementById('base').value);
+        const h = parseFloat(document.getElementById('height').value);
+        if (isNaN(b) || b < 0 || isNaN(h) || h < 0) { document.getElementById('result').textContent = '❌ Invalid values'; return; }
+        area = 0.5 * b * h;
+      } else {
+        const s = parseFloat(document.getElementById('side').value);
+        if (isNaN(s) || s < 0) { document.getElementById('result').textContent = '❌ Invalid side'; return; }
+        area = s * s;
+      }
+      document.getElementById('result').textContent = `Area (${shape}) = ${area.toFixed(2)} sq units`;
+    }
+    toggleInputs(); calculate();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Circular Linked List</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(580px, 94vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
+    .controls input { padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .9rem; outline: none; width: 80px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 8px 12px; border: none; border-radius: 6px; color: #fff; font-size: .8rem; cursor: pointer; transition: background .2s; }
+    .add-btn { background: #2563eb; } .add-btn:hover { background: #1d4ed8; }
+    .rem-btn { background: #dc2626; } .rem-btn:hover { background: #b91c1c; }
+    .clear-btn { background: #475569; } .clear-btn:hover { background: #64748b; }
+    .list-display { display: flex; gap: 4px; align-items: center; min-height: 60px; overflow-x: auto; background: #0f172a; border-radius: 8px; padding: 12px; margin-bottom: 8px; flex-wrap: wrap; justify-content: center; }
+    .node { background: #1e3a5f; color: #60a5fa; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-family: monospace; font-size: .95rem; white-space: nowrap; }
+    .node.head { border: 2px solid #4ade80; }
+    .arrow { color: #475569; font-size: 1rem; }
+    .back-arrow { color: #7c3aed; font-size: .9rem; }
+    .info { color: #94a3b8; font-size: .9rem; }
+    .back { margin-top: 14px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔄 Circular Linked List</h1>
+    <p class="subtitle">Last node points back to head</p>
+    <div class="controls">
+      <input type="number" id="cllInput" value="42" placeholder="Val" />
+      <button class="add-btn" onclick="addLast()">Add</button>
+      <button class="rem-btn" onclick="removeFirst()">Remove First</button>
+      <button class="clear-btn" onclick="clearList()">Clear</button>
+    </div>
+    <div class="list-display" id="listDisplay"></div>
+    <div class="info" id="cllInfo">Size: 0</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    let cll = [];
+    function render() {
+      const display = document.getElementById('listDisplay');
+      const info = document.getElementById('cllInfo');
+      if (cll.length === 0) { display.innerHTML = '<div style="color:#475569;">Empty</div>'; info.textContent = 'Size: 0'; return; }
+      display.innerHTML = cll.map((val, i) =>
+        `<div class="node${i === 0 ? ' head' : ''}">${val}</div>` + (i < cll.length - 1 ? '<span class="arrow">→</span>' : '')
+      ).join('') + '<span class="arrow">→</span><div class="node head" style="background:#4ade8022;border-color:#4ade80">↻ HEAD</div>';
+      info.textContent = `Size: ${cll.length} | Head: ${cll[0]} | Tail points back to head`;
+    }
+    function addLast() { const v = document.getElementById('cllInput').value; if (!v) return; cll.push(isNaN(Number(v)) ? v : Number(v)); render(); }
+    function removeFirst() { if (cll.length === 0) return; cll.shift(); render(); }
+    function clearList() { cll.length = 0; render(); }
+    render();
+  </script>
+</body>
+</html>
+

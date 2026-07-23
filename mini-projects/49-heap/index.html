@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heap (Max-Heap)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(520px, 90vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
+    .controls input { padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .9rem; outline: none; width: 80px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 8px 12px; border: none; border-radius: 6px; color: #fff; font-size: .8rem; cursor: pointer; transition: background .2s; }
+    .ins-btn { background: #2563eb; } .ins-btn:hover { background: #1d4ed8; }
+    .ext-btn { background: #dc2626; } .ext-btn:hover { background: #b91c1c; }
+    .clr-btn { background: #475569; } .clr-btn:hover { background: #64748b; }
+    .heap-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 60px; margin-bottom: 8px; }
+    .heap-array { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
+    .heap-item { background: #1e3a5f; color: #60a5fa; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-family: monospace; font-size: .95rem; }
+    .heap-item.max { background: #059669; color: #fff; border: 2px solid #4ade80; }
+    .heap-tree { font-family: monospace; font-size: .85rem; color: #94a3b8; margin-top: 8px; line-height: 1.6; }
+    .info { color: #94a3b8; font-size: .85rem; margin-bottom: 8px; }
+    .back { margin-top: 14px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🏔️ Max-Heap</h1>
+    <p class="subtitle">Parent ≥ Children. Root is the maximum element.</p>
+    <div class="controls">
+      <input type="number" id="heapInput" value="42" placeholder="Val" />
+      <button class="ins-btn" onclick="insert()">Insert</button>
+      <button class="ext-btn" onclick="extractMax()">Extract Max</button>
+      <button class="clr-btn" onclick="clearHeap()">Clear</button>
+    </div>
+    <div class="heap-display">
+      <div class="heap-array" id="heapArray"></div>
+      <div class="heap-tree" id="heapTree"></div>
+    </div>
+    <div class="info" id="heapInfo">Size: 0</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    let heap = [];
+    function parent(i) { return Math.floor((i - 1) / 2); }
+    function left(i) { return 2 * i + 1; }
+    function right(i) { return 2 * i + 2; }
+
+    function heapifyUp(i) {
+      while (i > 0 && heap[parent(i)] < heap[i]) {
+        [heap[i], heap[parent(i)]] = [heap[parent(i)], heap[i]];
+        i = parent(i);
+      }
+    }
+
+    function heapifyDown(i) {
+      let largest = i;
+      const l = left(i), r = right(i);
+      if (l < heap.length && heap[l] > heap[largest]) largest = l;
+      if (r < heap.length && heap[r] > heap[largest]) largest = r;
+      if (largest !== i) {
+        [heap[i], heap[largest]] = [heap[largest], heap[i]];
+        heapifyDown(largest);
+      }
+    }
+
+    function insert() {
+      const v = parseInt(document.getElementById('heapInput').value);
+      if (isNaN(v)) return;
+      heap.push(v);
+      heapifyUp(heap.length - 1);
+      render();
+    }
+
+    function extractMax() {
+      if (heap.length === 0) { alert('Heap is empty!'); return; }
+      const max = heap[0];
+      heap[0] = heap[heap.length - 1];
+      heap.pop();
+      if (heap.length > 0) heapifyDown(0);
+      render();
+      alert(`Extracted max: ${max}`);
+    }
+
+    function clearHeap() { heap = []; render(); }
+
+    function render() {
+      const arrEl = document.getElementById('heapArray');
+      const treeEl = document.getElementById('heapTree');
+      const info = document.getElementById('heapInfo');
+      if (heap.length === 0) {
+        arrEl.innerHTML = '<div style="color:#475569;">Empty heap</div>';
+        treeEl.textContent = '';
+        info.textContent = 'Size: 0'; return;
+      }
+      arrEl.innerHTML = heap.map((v, i) => `<div class="heap-item${i === 0 ? ' max' : ''}">${v}${i === 0 ? ' (max)' : ''}</div>`).join('');
+      // Simple tree representation
+      let treeStr = '';
+      const levels = Math.ceil(Math.log2(heap.length + 1));
+      for (let level = 0; level < levels; level++) {
+        const start = Math.pow(2, level) - 1;
+        const end = Math.min(Math.pow(2, level + 1) - 1, heap.length);
+        if (start >= heap.length) break;
+        const spaces = '  '.repeat(Math.max(1, Math.pow(2, levels - level - 1)));
+        const vals = [];
+        for (let i = start; i < end; i++) vals.push(heap[i] !== undefined ? heap[i] : ' ');
+        treeStr += spaces + vals.join('  '.repeat(Math.max(1, Math.pow(2, levels - level)))) + '\n';
+      }
+      treeEl.textContent = treeStr;
+      info.textContent = `Size: ${heap.length} | Root (max): ${heap[0]}`;
+    }
+    render();
+  </script>
+</body>
+</html>
+

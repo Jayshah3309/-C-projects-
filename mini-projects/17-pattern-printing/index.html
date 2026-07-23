@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pattern Printing</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(460px, 90vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 20px; font-family: 'Segoe UI', sans-serif; font-size: 1.8rem; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: 0.9rem; font-family: 'Segoe UI', sans-serif; }
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 1rem;
+      outline: none;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    input:focus, select:focus { border-color: #60a5fa; }
+    .row { display: flex; gap: 10px; }
+    .row > * { flex: 1; }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: 'Segoe UI', sans-serif;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1d4ed8; }
+    .pattern-output {
+      margin-top: 18px;
+      padding: 16px;
+      background: #0f172a;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      text-align: center;
+      min-height: 5em;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: 0.9rem; font-family: 'Segoe UI', sans-serif; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>⭐ Pattern Printing</h1>
+    <div class="row">
+      <div class="group">
+        <label>Pattern</label>
+        <select id="patternType">
+          <option value="star-triangle">Star Triangle</option>
+          <option value="star-pyramid">Star Pyramid</option>
+          <option value="number-triangle">Number Triangle</option>
+          <option value="diamond">Diamond</option>
+        </select>
+      </div>
+      <div class="group">
+        <label>Rows</label>
+        <input type="number" id="rows" value="5" min="1" max="15" />
+      </div>
+    </div>
+    <button onclick="generate()">Generate Pattern</button>
+    <div class="pattern-output" id="output">    *
+   ***
+  *****
+ *******
+*********</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function generate() {
+      const type = document.getElementById('patternType').value;
+      const n = parseInt(document.getElementById('rows').value);
+      const el = document.getElementById('output');
+      if (isNaN(n) || n < 1 || n > 20) { el.textContent = '❌ Rows must be 1-20'; return; }
+      let lines = [];
+      if (type === 'star-triangle') {
+        for (let i = 1; i <= n; i++) lines.push('*'.repeat(i));
+      } else if (type === 'star-pyramid') {
+        for (let i = 1; i <= n; i++) {
+          const spaces = ' '.repeat(n - i);
+          const stars = '*'.repeat(2 * i - 1);
+          lines.push(spaces + stars);
+        }
+      } else if (type === 'number-triangle') {
+        for (let i = 1; i <= n; i++) {
+          const nums = Array.from({length: i}, (_, j) => j + 1).join(' ');
+          lines.push(' '.repeat(n - i) + nums);
+        }
+      } else if (type === 'diamond') {
+        for (let i = 1; i <= n; i++) {
+          lines.push(' '.repeat(n - i) + '*'.repeat(2 * i - 1));
+        }
+        for (let i = n - 1; i >= 1; i--) {
+          lines.push(' '.repeat(n - i) + '*'.repeat(2 * i - 1));
+        }
+      }
+      el.textContent = lines.join('\n');
+    }
+    generate();
+  </script>
+</body>
+</html>
+

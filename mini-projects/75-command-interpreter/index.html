@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Command Interpreter</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Consolas',monospace;min-height:100vh;background:#0a0e14;color:#c0caf5;display:flex;justify-content:center;align-items:center}
+.card{background:#131a24;border:1px solid #2a3a4a;border-radius:12px;padding:20px;width:min(640px,94vw)}
+h1{color:#7aa2f7;font-family:'Segoe UI',sans-serif;font-size:1.3rem;margin-bottom:12px}
+.terminal{background:#0a0e14;border-radius:8px;padding:12px;min-height:300px;max-height:400px;overflow-y:auto;font-size:.85rem;line-height:1.6;margin-bottom:10px}
+.cmd-line{white-space:pre-wrap;word-break:break-all}
+.prompt{color:#9ece6a}
+.error{color:#f7768e}
+.info{color:#565f89;font-size:.8rem}
+.input-line{display:flex;align-items:center;gap:6px}
+.input-line span{color:#9ece6a}
+.input-line input{flex:1;background:transparent;border:none;color:#c0caf5;font-family:'Consolas',monospace;font-size:.85rem;outline:none}
+.back{display:inline-block;margin-top:10px;color:#565f89;font-size:.85rem;font-family:'Segoe UI',sans-serif}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>⌨️ Command Interpreter</h1>
+<div class="terminal" id="terminal"><div class="cmd-line"><span class="info">Mini Interpreter v1.0 | Type 'help'</span></div></div>
+<div class="input-line"><span>»</span><input type="text" id="cmdInput" placeholder="Enter command..." autofocus /></div>
+<a class="back" href="../../index.html">← Back to Hub</a>
+</div>
+<script>
+const terminal=document.getElementById('terminal');
+const input=document.getElementById('cmdInput');
+let vars={};
+function print(text,cls=''){const d=document.createElement('div');d.className='cmd-line '+cls;d.innerHTML=text;terminal.appendChild(d);terminal.scrollTop=terminal.scrollHeight}
+function execute(cmd){
+if(!cmd.trim())return;
+print(`<span class="prompt">»</span> ${cmd}`);
+const parts=cmd.trim().split(/\s+/);
+const c=parts[0].toLowerCase(),args=parts.slice(1);
+switch(c){
+case 'help':print('Commands: help, echo, print, set, calc, math, eval, date, whoami, clear, exit');break;
+case 'echo':print(args.join(' '));break;
+case 'print':print(args.join(' '));break;
+case 'date':print(new Date().toString());break;
+case 'whoami':print('user');break;
+case 'clear':terminal.innerHTML='';break;
+case 'exit':print('Goodbye!');break;
+case 'set':
+if(args.length>=2){vars[args[0]]=args.slice(1).join(' ');print(`Set ${args[0]} = ${vars[args[0]]}`);}
+else print('Usage: set var value','error');
+break;
+case 'calc':
+case 'math':
+case 'eval':
+try{
+const expr=args.join(' ');
+const result=Function('"use strict";return ('+expr+')')();
+print(`= ${result}`);
+}catch(e){print(`Error: ${e.message}`,'error');}
+break;
+default:
+if(vars[c])print(vars[c]);
+else print(`Unknown command: ${c}`,'error');
+}
+}
+input.addEventListener('keydown',e=>{if(e.key==='Enter'){execute(input.value);input.value='';}});
+</script>
+</body>
+</html>
+

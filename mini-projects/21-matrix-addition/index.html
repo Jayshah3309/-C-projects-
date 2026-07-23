@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matrix Addition</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(700px, 95vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 20px; font-size: 1.8rem; }
+    .row-group { display: flex; gap: 12px; margin-bottom: 14px; align-items: end; }
+    .group { text-align: left; flex: 1; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: 0.85rem; }
+    input { width: 100%; padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: 0.95rem; outline: none; }
+    input:focus { border-color: #60a5fa; }
+    .matrices { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+    .matrix-box { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; }
+    .matrix-box h3 { font-size: 0.95rem; color: #94a3b8; margin-bottom: 8px; }
+    .matrix-box table { border-collapse: collapse; }
+    .matrix-box td { padding: 4px 8px; }
+    .matrix-box input { width: 52px; padding: 4px 6px; text-align: center; font-size: 0.9rem; }
+    .result-box { margin-top: 16px; }
+    .result-box table { margin: 0 auto; border-collapse: collapse; }
+    .result-box td { padding: 6px 12px; border: 1px solid #334155; }
+    .result-box td.val { color: #4ade80; font-weight: 600; min-width: 40px; text-align: center; }
+    button { padding: 10px 28px; background: #2563eb; border: none; border-radius: 8px; color: #fff; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+    button:hover { background: #1d4ed8; }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>➕ Matrix Addition</h1>
+    <div class="row-group">
+      <div class="group"><label>Rows</label><input type="number" id="rows" value="3" min="1" max="6" /></div>
+      <div class="group"><label>Columns</label><input type="number" id="cols" value="3" min="1" max="6" /></div>
+      <button onclick="buildMatrices()">Set Size</button>
+    </div>
+    <div class="matrices" id="matrices"></div>
+    <div class="result-box" id="result"></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    let rows = 3, cols = 3;
+    function buildMatrices() {
+      rows = parseInt(document.getElementById('rows').value) || 3;
+      cols = parseInt(document.getElementById('cols').value) || 3;
+      if (rows < 1) rows = 1; if (rows > 8) rows = 8;
+      if (cols < 1) cols = 1; if (cols > 8) cols = 8;
+      const m = document.getElementById('matrices');
+      m.innerHTML = ['A', 'B'].map((label, idx) => {
+        let html = `<div class="matrix-box"><h3>Matrix ${label}</h3><table>`;
+        for (let r = 0; r < rows; r++) {
+          html += '<tr>';
+          for (let c = 0; c < cols; c++) {
+            const val = (idx === 0) ? (r * cols + c + 1) : (rows * cols - r * cols - c);
+            html += `<td><input type="number" id="${label}${r}${c}" value="${val}" /></td>`;
+          }
+          html += '</tr>';
+        }
+        html += '</table></div>';
+        return html;
+      }).join('');
+      compute();
+    }
+    function compute() {
+      const el = document.getElementById('result');
+      let html = '<h3 style="color:#94a3b8;margin:10px 0">A + B =</h3><table>';
+      for (let r = 0; r < rows; r++) {
+        html += '<tr>';
+        for (let c = 0; c < cols; c++) {
+          const a = parseFloat(document.getElementById(`A${r}${c}`).value) || 0;
+          const b = parseFloat(document.getElementById(`B${r}${c}`).value) || 0;
+          html += `<td class="val">${(a + b).toFixed(1)}</td>`;
+        }
+        html += '</tr>';
+      }
+      html += '</table>';
+      el.innerHTML = html;
+    }
+    window.addEventListener('input', (e) => { if (e.target.tagName === 'INPUT') compute(); });
+    buildMatrices();
+  </script>
+</body>
+</html>
+

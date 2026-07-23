@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dijkstra's Algorithm</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; display: flex; justify-content: center; align-items: center; }
+    .card { background: rgba(30,41,59,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 30px; width: min(580px, 94vw); text-align: center; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #94a3b8; font-size: .9rem; margin-bottom: 16px; }
+    .controls { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 14px; }
+    .controls input { padding: 8px 12px; border: 1px solid #334155; border-radius: 6px; background: #0f172a; color: #e2e8f0; font-size: .9rem; outline: none; width: 80px; }
+    .controls input:focus { border-color: #60a5fa; }
+    .controls button { padding: 8px 16px; border: none; border-radius: 6px; color: #fff; font-size: .85rem; cursor: pointer; transition: background .2s; }
+    .run-btn { background: #2563eb; } .run-btn:hover { background: #1d4ed8; }
+    .graph-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 60px; margin-bottom: 8px; text-align: left; font-family: monospace; font-size: .85rem; line-height: 1.6; }
+    .result-display { background: #0f172a; border-radius: 8px; padding: 12px; min-height: 40px; margin-bottom: 8px; }
+    .path-item { color: #4ade80; font-weight: 600; }
+    .info { color: #94a3b8; font-size: .85rem; }
+    .back { margin-top: 14px; display: inline-block; color: #94a3b8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🛣️ Dijkstra's Algorithm</h1>
+    <p class="subtitle">Shortest path from source to all nodes (weighted graph)</p>
+    <div class="controls">
+      <input type="text" id="sourceNode" value="A" placeholder="Source" style="width:60px" />
+      <button class="run-btn" onclick="runDijkstra()">Run Dijkstra</button>
+    </div>
+    <div class="graph-display" id="graphDisplay">
+      A → B(4), C(2)<br>
+      B → A(4), C(1), D(5)<br>
+      C → A(2), B(1), D(8), E(10)<br>
+      D → B(5), C(8), E(2)<br>
+      E → C(10), D(2)
+    </div>
+    <div class="result-display" id="resultDisplay"></div>
+    <div class="info" id="dijkstraInfo">Edges shown as: neighbor(weight)</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    // Weighted graph
+    const wGraph = {
+      'A': {'B': 4, 'C': 2},
+      'B': {'A': 4, 'C': 1, 'D': 5},
+      'C': {'A': 2, 'B': 1, 'D': 8, 'E': 10},
+      'D': {'B': 5, 'C': 8, 'E': 2},
+      'E': {'C': 10, 'D': 2}
+    };
+
+    function runDijkstra() {
+      const start = document.getElementById('sourceNode').value.trim().toUpperCase();
+      if (!wGraph[start]) { alert('Source not in graph!'); return; }
+
+      const dist = {};
+      const prev = {};
+      const unvisited = new Set();
+
+      for (const node in wGraph) {
+        dist[node] = Infinity;
+        prev[node] = null;
+        unvisited.add(node);
+      }
+      dist[start] = 0;
+
+      while (unvisited.size > 0) {
+        // Find min distance node
+        let minNode = null;
+        for (const node of unvisited) {
+          if (minNode === null || dist[node] < dist[minNode]) minNode = node;
+        }
+        if (minNode === null || dist[minNode] === Infinity) break;
+        unvisited.delete(minNode);
+
+        for (const [neighbor, weight] of Object.entries(wGraph[minNode])) {
+          if (unvisited.has(neighbor)) {
+            const alt = dist[minNode] + weight;
+            if (alt < dist[neighbor]) {
+              dist[neighbor] = alt;
+              prev[neighbor] = minNode;
+            }
+          }
+        }
+      }
+
+      // Build result
+      const resultDisplay = document.getElementById('resultDisplay');
+      let html = '<table style="width:100%;border-collapse:collapse;font-size:.85rem">';
+      html += '<tr><th style="text-align:left;color:#60a5fa;padding:4px 8px">Node</th><th style="text-align:left;color:#60a5fa;padding:4px 8px">Distance</th><th style="text-align:left;color:#60a5fa;padding:4px 8px">Path</th></tr>';
+
+      for (const node of Object.keys(wGraph).sort()) {
+        if (node !== start) {
+          const d = dist[node] === Infinity ? '∞' : dist[node];
+          // Reconstruct path
+          const path = [];
+          let cur = node;
+          while (cur) {
+            path.unshift(cur);
+            cur = prev[cur];
+          }
+          const pathStr = path.length > 1 ? path.join(' → ') : 'No path';
+          html += `<tr><td style="padding:4px 8px;color:#e2e8f0">${node}</td><td style="padding:4px 8px;color:#4ade80;font-weight:600">${d}</td><td style="padding:4px 8px;color:#94a3b8">${pathStr}</td></tr>`;
+        }
+      }
+      html += '</table>';
+      resultDisplay.innerHTML = html;
+      document.getElementById('dijkstraInfo').textContent = `Shortest paths from ${start} to all other nodes`;
+    }
+    runDijkstra();
+  </script>
+</body>
+</html>
+

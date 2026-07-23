@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multiplication Table</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(440px, 90vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 20px; font-size: 1.8rem; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: 0.9rem; }
+    input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 1rem;
+      outline: none;
+    }
+    input:focus { border-color: #60a5fa; }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1d4ed8; }
+    .table {
+      margin-top: 18px;
+      padding: 14px;
+      background: #0f172a;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      text-align: center;
+      line-height: 1.8;
+      font-family: 'Courier New', monospace;
+    }
+    .table .row { color: #cbd5e1; }
+    .table .row:nth-child(odd) { color: #60a5fa; }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>✖️ Multiplication Table</h1>
+    <div class="group">
+      <label>Enter number</label>
+      <input type="number" id="numInput" value="7" />
+    </div>
+    <button onclick="generate()">Generate Table</button>
+    <div class="table" id="table"></div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    function generate() {
+      const n = parseInt(document.getElementById('numInput').value);
+      const el = document.getElementById('table');
+      if (isNaN(n)) { el.innerHTML = '❌ Enter a valid number'; return; }
+      el.innerHTML = Array.from({length: 10}, (_, i) => {
+        const m = i + 1;
+        return `<div class="row">${n} × ${String(m).padStart(2, ' ')} = ${n * m}</div>`;
+      }).join('');
+    }
+    generate();
+  </script>
+</body>
+</html>
+

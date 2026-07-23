@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Currency Converter</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 30px;
+      width: min(440px, 90vw);
+      text-align: center;
+    }
+    h1 { margin-bottom: 20px; font-size: 1.8rem; }
+    .group { margin-bottom: 14px; text-align: left; }
+    label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: 0.9rem; }
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 1rem;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: #60a5fa; }
+    .row { display: flex; gap: 10px; }
+    .row > * { flex: 1; }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1d4ed8; }
+    .result {
+      margin-top: 18px;
+      padding: 14px;
+      background: #0f172a;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      min-height: 3em;
+    }
+    .back { margin-top: 18px; display: inline-block; color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>💱 Currency Converter</h1>
+    <div class="group">
+      <label>Amount</label>
+      <input type="number" id="amount" value="1" />
+    </div>
+    <div class="row">
+      <div class="group">
+        <label>From</label>
+        <select id="fromCurr"><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="JPY">JPY</option><option value="INR">INR</option><option value="CAD">CAD</option><option value="AUD">AUD</option><option value="CNY">CNY</option></select>
+      </div>
+      <div class="group">
+        <label>To</label>
+        <select id="toCurr"><option value="EUR">EUR</option><option value="USD">USD</option><option value="GBP">GBP</option><option value="JPY">JPY</option><option value="INR">INR</option><option value="CAD">CAD</option><option value="AUD">AUD</option><option value="CNY">CNY</option></select>
+      </div>
+    </div>
+    <button onclick="convert()">Convert</button>
+    <div class="result" id="result">--</div>
+    <a class="back" href="../../index.html">← Back to Hub</a>
+  </div>
+  <script>
+    const rates = { USD: 1, EUR: 0.92, GBP: 0.79, JPY: 149.5, INR: 83.1, CAD: 1.36, AUD: 1.53, CNY: 7.24 };
+    function convert() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const from = document.getElementById('fromCurr').value;
+      const to = document.getElementById('toCurr').value;
+      if (isNaN(amount) || amount < 0) { document.getElementById('result').textContent = '❌ Enter a valid amount'; return; }
+      const usd = amount / rates[from];
+      const result = (usd * rates[to]).toFixed(2);
+      document.getElementById('result').textContent = `${amount} ${from} = ${result} ${to}`;
+    }
+    convert();
+  </script>
+</body>
+</html>
+
